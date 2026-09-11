@@ -2,5 +2,3 @@
 
 İlk repo başlatıldı
 
-hi
-
