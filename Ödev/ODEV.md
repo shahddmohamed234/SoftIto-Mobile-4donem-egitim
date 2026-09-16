@@ -9,7 +9,7 @@ DEĞİLSE
         Ürünü seç ve sepete ekle
     DÖNGÜ BİTİR
 
-    EĞER cüzdan bakiyesi < sepet tutarı İSE
+  EĞER cüzdan bakiyesi < sepet tutarı İSE
         "Bakiye Yükle" uyarısı ver
     DEĞİLSE
         Siparişi onayla
