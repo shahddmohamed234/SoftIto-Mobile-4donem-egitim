@@ -1,0 +1,82 @@
+--1.SQL CRUD İşlemleri
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS users(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fullname TEXT NOT NULL,
+    city TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP 
+    /*SQLite'ta CURRENT_TIMESTAMP komutu her zaman UTC 
+    (Eşgüdümlü Evrensel Zaman) standart saatini kaydeder, yerel saati kaydetmez.*/
+); --burada bir tablo oluşturuldu
+
+INSERT INTO users (fullname,city,email)
+VALUES
+('Selahaddin Çiftçi', 'Istanbul', 'kodusta@github.com'),
+('Shahd Mohamed', 'Bialystok', 'shahddmohamed234@gmail.com'),
+('Merve Salama', 'Cairo', 'marwasalama123@hotmail.com');
+--olşturduğumuz tablonun içerisinde bu bilgileri insert ettik
+--burada tek listede toplu ekleme yapınca daha hızlı ve maliyeti daha az oldu
+
+SELECT * FROM users WHERE id=1; -- * ile her şeyi listeler
+--SELECT city FROM users WHERE id=1; burada ise sadece city'leri listeler
+
+UPDATE users SET email = 'marwasalama123@gmail.com' WHERE id=3; 
+--burada listedeki 3.email'de güncelleme yapıldı
+
+DELETE FROM users WHERE id=2;
+--burada listedeki 2.satır silindi
+
+/*
+id      fullname            city        email                       created_at
+1       Selahaddin Çiftçi   Istanbul    kodusta@github.com          2026-09-16 16:08:23
+3       Merve Salama        Cairo       marwasalama123@gmail.com    2026-09-16 16:08:46
+
+*/
+
+--2.INNER JOIN
+
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS users(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fullname TEXT NOT NULL,
+    city TEXT NOT NULL
+ ); --burada bir tablo oluşturuldu
+
+
+CREATE TABLE IF NOT EXISTS orders(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    product TEXT NOT NULL,
+    quantity INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    -- GÜVENLİK KİLİDİ: Olmayan bir müşteriye sipariş girilmesini engeller. 
+    -- Buraya yazılan 'user_id', mutlaka 'users' tablosunda kayıtlı bir 'id' olmak zorundadır.
+); --burada bir tablo oluşturuldu
+
+INSERT INTO users (fullname, city)
+VALUES
+('Selahaddin Çiftçi', 'Istanbul'),
+('Shahd Mohamed', 'Bialystok');
+
+
+INSERT INTO orders (user_id, product, quantity)
+VALUES
+(1, 't-shirt', 2),  -- 1 numaralı kullanıcı (Selahaddin) 2 tişört aldı
+(2, 'skirt', 1),    -- 2 numaralı kullanıcı (Shahd) 1 etek aldı
+(1, 'slippers', 4); -- 1 numaralı kullanıcı (Selahaddin) 4 terlik aldı
+
+SELECT fullname, city, product, quantity 
+FROM users 
+INNER JOIN orders ON users.id = orders.user_id; --Müşteri ID'si ile Sipariş ID'sini eşleştirip birleştir
+
+/*
+fullname            city        product         quantity
+Selahaddin Çiftçi   Istanbul    t-shirt             2
+Shahd Mohamed       Bialystok   skirt               1
+Selahaddin Çiftçi   Istanbul    slippers            4
+       
+*/
