@@ -1,0 +1,36 @@
+PRAGMA foreign_keys = ON;
+
+-- 1. Bölümler
+CREATE TABLE IF NOT EXISTS departments(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    department_name TEXT NOT NULL
+);
+
+-- 2. Dersler
+CREATE TABLE IF NOT EXISTS courses(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    course_code TEXT UNIQUE NOT NULL,
+    title TEXT NOT NULL,
+    credit INTEGER NOT NULL CHECK (credit > 0)
+);
+
+-- 3. Öğrenciler - Bölüm ile ilişkilendirildi
+CREATE TABLE IF NOT EXISTS students(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_number TEXT UNIQUE NOT NULL,
+    full_name TEXT NOT NULL,
+    department_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE RESTRICT
+);
+
+-- 4. Kayıtlar/Notlar - Öğrenci ve Ders arasındaki çoka-çok ilişki
+CREATE TABLE IF NOT EXISTS enrollments(
+    student_id INTEGER NOT NULL,
+    course_id INTEGER NOT NULL,
+    enrollment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    final_grade INTEGER CHECK (final_grade BETWEEN 0 AND 100),
+    PRIMARY KEY(student_id, course_id),
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE RESTRICT
+);
