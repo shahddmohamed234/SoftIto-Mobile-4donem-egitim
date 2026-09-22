@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouldering Başlangıç Paketi</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+                'Open Sans', 'Helvetica Neue', sans-serif;
+            background: #f8fafc;
+            padding: 24px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+
+        video,
+        iframe {
+            width: 100%;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        meter {
+            width: 100%;
+            height: 24px;
+            margin-bottom: 8px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        details {
+            margin-bottom: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            color: #1e40af;
+        }
+
+        details[open] {
+            background: #eff6ff;
+        }
+
+        details p {
+            font-size: 13px;
+            color: #334155;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        dialog {
+            border: none;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 360px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-modal {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h3>Bouldering Başlangıç Paketi</h3>
+
+
+        <video playsinline controls preload="metadata">
+            <source src="https://rock-hub.co.uk/wp-content/uploads/2023/05/outdoor-climbing.mp4" type="video/mp4">
+            <source src="https://rock-hub.co.uk/wp-content/uploads/2023/05/outdoor-climbing.mp4" type="video/webm">
+            Tarayıcınız HTML5 video etiketini desteklemiyor
+        </video>
+
+
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/JtzthnwhDPI?si=PR1PqsvCqsZY0-KF"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+    </div>
+
+    <div class="card">
+        <h3>Salon Durumu</h3>
+
+
+        <label for="m1">Bugünkü Salon Doluluk Oranı (Yüksek İse Kırmızı Yakar)</label>
+        <meter value="85" id="m1" min="0" max="100" low="40" high="80" optimum="10"></meter>
+        <div class="hint">Kapasite aşıldığı için tarayıcı bunu otomatik <strong>Kırmızı</strong> renkle uyarır!</div>
+
+        <br>
+
+        <label for="m2">Aylık İndirimli Paket Stoğu</label>
+        <meter value="90" id="m2" min="0" max="100" low="20" high="80" optimum="90"></meter>
+        <div class="hint">İdeal Seviyede olduğu için tarayıcı bunu otomatik <strong>Yeşil</strong> renkle uyarır!</div>
+    </div>
+
+    <div class="card">
+        <h3>Sıkça Sorulan Sorular</h3>
+
+        <details open>
+            <summary>Özel ekipman almam gerekiyor mu?</summary>
+            <p>Hayır, başlangıç için sadece esnek kıyafetler giymeniz yeterlidir. Ayakkabı ve magnezyum tozu bizden!</p>
+        </details>
+
+        <details>
+            <summary>Daha önce hiç tırmanmadım, yapabilir miyim?</summary>
+            <p>Kesinlikle! Antrenörlerimiz ilk seansınızda size kısa bir eğitim verecektir.</p>
+        </details>
+    </div>
+
+    <div class="card">
+        <h3>Konum ve Detaylar</h3>
+
+
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.642571212269!2d29.0274!3d40.9926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zS2FkxLFrwJbfeQ!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str"
+            height="200" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+        <br>
+
+        <p style="font-size: 13px;color: #64748b; margin-top:0;">Aşağıdaki butona bas üyelik fiyatı hakkında bilgi al!
+        </p>
+        <button class="btn-modal" onclick="document.getElementById('detayModal').showModal()">Paket Detaylarını
+            Göster</button>
+    </div>
+
+
+    <dialog id="detayModal">
+        <h3 style="margin-top: 0;">Başlangıç Paketi Fiyatı</h3>
+        <p style="font-size: 13px;color: #475569;">1 aylık sınırsız kullanım ve eğitim dahil fiyatınız:</p>
+
+        <div
+            style="background: #f1f5f9;padding: 10px; text-align: center;font-weight: bold;border-radius: 6px; color:black;">
+            1.250 TL
+        </div>
+
+        <div style="margin-top: 16px;text-align: right;">
+            <button onclick="document.getElementById('detayModal').close()"
+                style="padding: 6px 12px; border-radius: 4px; cursor:pointer;">
+                Kapat
+            </button>
+        </div>
+    </dialog>
+
+</body>
+
+</html>
