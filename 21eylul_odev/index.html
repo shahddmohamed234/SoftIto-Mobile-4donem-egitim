@@ -98,6 +98,96 @@
             cursor: pointer;
             width: 100%;
         }
+
+       
+        .player-container {
+            position: relative;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 12px;
+        }
+
+        .player-container video {
+            width: 100%;
+            display: block;
+            margin-bottom: 0; 
+        }
+
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timeline-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: white;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-bar {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 5px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #38bdf8;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .left-controls,
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .custom-controls button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .custom-controls button:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .speed-badge {
+            background: #0284c7 ;
+        }
+      
     </style>
 </head>
 
@@ -106,25 +196,44 @@
     <div class="card">
         <h3>Bouldering Başlangıç Paketi</h3>
 
+       
+        <div class="player-container" id="videoBox">
+           
+            <video id="myVideo" playsinline preload="metadata">
+                <source src="https://rock-hub.co.uk/wp-content/uploads/2023/05/outdoor-climbing.mp4" type="video/mp4">
+                <source src="https://rock-hub.co.uk/wp-content/uploads/2023/05/outdoor-climbing.mp4" type="video/webm">
+                Tarayıcınız HTML5 video etiketini desteklemiyor
+            </video>
 
-        <video playsinline controls preload="metadata">
-            <source src="https://rock-hub.co.uk/wp-content/uploads/2023/05/outdoor-climbing.mp4" type="video/mp4">
-            <source src="https://rock-hub.co.uk/wp-content/uploads/2023/05/outdoor-climbing.mp4" type="video/webm">
-            Tarayıcınız HTML5 video etiketini desteklemiyor
-        </video>
+            <div class="custom-controls">
+                <div class="timeline-container">
+                    <span id="currentTime">00:00</span>
+                    <input type="range" id="progressBar" class="progress-bar" min="0" max="100" value="0">
+                    <span id="durationTime">00:00</span>
+                </div>
 
+                <div class="button-group">
+                    <div class="left-controls">
+                        <button id="btnPlay">Oynat</button>
+                        <button id="btnMute">Sesli</button>
+                    </div>
+                    <div class="right-controls">
+                        <button id="btnSpeed" class="speed-badge">1.0x</button>
+                        <button id="btnPip">Pip</button>
+                        <button id="btnFull">Tam Ekran</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <iframe width="560" height="315" src="https://www.youtube.com/embed/JtzthnwhDPI?si=PR1PqsvCqsZY0-KF"
             title="YouTube video player" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen></iframe>
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
     <div class="card">
         <h3>Salon Durumu</h3>
-
 
         <label for="m1">Bugünkü Salon Doluluk Oranı (Yüksek İse Kırmızı Yakar)</label>
         <meter value="85" id="m1" min="0" max="100" low="40" high="80" optimum="10"></meter>
@@ -154,7 +263,6 @@
     <div class="card">
         <h3>Konum ve Detaylar</h3>
 
-
         <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.642571212269!2d29.0274!3d40.9926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zS2FkxLFrwJbfeQ!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str"
             height="200" style="border:0;" allowfullscreen="" loading="lazy"
@@ -167,7 +275,6 @@
         <button class="btn-modal" onclick="document.getElementById('detayModal').showModal()">Paket Detaylarını
             Göster</button>
     </div>
-
 
     <dialog id="detayModal">
         <h3 style="margin-top: 0;">Başlangıç Paketi Fiyatı</h3>
@@ -185,6 +292,94 @@
             </button>
         </div>
     </dialog>
+
+
+    <script>
+        const video = document.getElementById('myVideo');
+        const btnPlay = document.getElementById('btnPlay');
+        const btnMute = document.getElementById('btnMute');
+        const btnSpeed = document.getElementById('btnSpeed');
+        const btnPip = document.getElementById('btnPip');
+        const btnFull = document.getElementById('btnFull');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeEL = document.getElementById('currentTime');
+        const durationTimeEl = document.getElementById('durationTime');
+
+        // 1.Play / Pause Yönetimi
+        btnPlay.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                btnPlay.innerText = "Duraklat";
+            } else {
+                video.pause();
+                btnPlay.innerText = "Oynat";
+            }
+        });
+
+        // 2.Zaman formatlama
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min.toString().padStart(2, '0')}:${(sec.toString().padStart(2, '0'))}`;
+        }
+
+        // 3.Metadata Toplam Süreyi alma
+        video.addEventListener('loadedmetadata', () => {
+            durationTimeEl.innerText = formatTime(video.duration);
+        });
+
+        // 4. video oynarken ilerleme çubuğu güncelleme
+        video.addEventListener('timeupdate', () => {
+            currentTimeEL.innerText = formatTime(video.currentTime);
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.value = isNaN(progress) ? 0 : progress;
+        });
+
+        // 5.Kullanıcı Cubuğu kaydırdığında videoyu ileri geri sarma
+        progressBar.addEventListener('input', (e) => {
+            const seekTime = (e.target.value / 100) * video.duration;
+            video.currentTime = seekTime;
+        });
+
+        // 6.Sessize Alma Toggle
+        btnMute.addEventListener('click', () => {
+            video.muted = !video.muted;
+            btnMute.innerText = video.muted ? 'Sessiz' : 'Sesli';
+        });
+
+        // 7.Oynatma Hızı
+        const speeds = [1.0, 1.25, 1.5, 2.0];
+        let speedIndex = 0;
+        btnSpeed.addEventListener('click', () => {
+            speedIndex = (speedIndex + 1) % speeds.length;
+            video.playbackRate = speeds[speedIndex];
+            btnSpeed.innerText = `${speeds[speedIndex]}x`;
+        });
+
+        // 8.Pip resim içinde Resim
+        btnPip.addEventListener('click', async () => {
+            try {
+                if (document.pictureInPictureElement) {
+                    await document.exitPictureInPicture();
+                } else {
+                    await video.requestPictureInPicture();
+                }
+
+            } catch (err) {
+                console.warn('Pİp desteklemiyor veya izin verilmedi', err);
+            }
+        });
+        
+        // 9. Tam ekran 
+        btnFull.addEventListener('click', () => {
+            const container = document.getElementById('videoBox');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => alert(err.message));
+            } else {
+                document.exitFullscreen();
+            }
+        });
+    </script>
 
 </body>
 
