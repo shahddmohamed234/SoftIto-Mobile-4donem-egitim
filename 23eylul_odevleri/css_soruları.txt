@@ -1,0 +1,62 @@
+1)Flexbox vs CSS Grid Mimari Farkı:
+Flex(1D) elemanları sadece satır veya sadece sütun eksininde hızalarken, CSS Grid(2D) hem satırı hem sütunu aynı anda yönetir.
+
+Flexbox Kullanım Alanları: Navigasyon menüleri,buton grupları, liste satırları vb.
+CSS Grid Kullanım Alanları: tüm sayfanın iskeleti, dasboard kartları, fotoğraf galeri vb.
+
+2)fr (Fractional Unit) ve Yüzde (%) Güvenliği:
+Yüzde birimi, ebeveynin toplam genişliğini baz alır; eğer elemanlara gap, margin veya padding
+eklerseniz toplam genişlik %100'ü aşar ve taşmalara (overflow) neden olur. fr ise sabit boyutlar
+ve gap boşlukları hesaplandıktan sonra kalan boş alanı orantılı olarak dağıtır.
+
+3)Mobile-First" Mimarisi Avantajı:
+Tarayıcılar CSS'i yukarıdan aşağıya okur. Mobile-First (min-width) yaklaşımında,
+en sade ve hafif olan mobil arayüz kodları standart olarak yüklenir, ekran büyüdükçe karmaşık masaüstü kodları devreye girer.
+Desktop-First yaklaşımında ise zayıf donanımlı bir mobil cihaz, önce ağır masaüstü kodlarını işlemek, ardından @media
+sorgularıyla bunları "ezip" iptal etmek zorunda kalır. Mobile-First performans, okunabilirlik ve bakım kolaylığı sağlar.
+
+4)transform / opacity vs top / left / width:
+Kötü Yöntem (width, top, left):
+Bu özelliklerle animasyon yapmak, tarayıcıya sayfadaki diğer tüm elemanların yerini ve boyutunu saniyede onlarca kez baştan hesaplattırır.
+Bu durum ana işlemciyi (CPU) çok yorar ve animasyonun ekranda takılarak (kasılarak) ilerlemesine neden olur.
+
+İyi Yöntem (transform ve opacity):
+Bu özellikler sayfanın genel düzenine hiç dokunmaz; elemanı ana sayfadan bağımsız bir katman gibi hareket ettirir.
+İşlem doğrudan ekran kartında (GPU) yapıldığı için bilgisayarı yormaz ve animasyonlar yağ gibi pürüzsüz akar.
+
+5)auto-fit ve minmax() Sinerjisi:
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); şeklinde kullanıldığında,
+tarayıcı kutuları minimum 250px genişliğinde yan yana dizer. Ekran daraldığında sığmayan kutu otomatik olarak alt satıra geçer.
+Satırda fazladan boşluk kalırsa 1fr sayesinde kutular genişleyip o boşluğu doldurur.
+Tek satır kodla, hiçbir Media Query yazmadan tam otomatik responsive ızgaralar elde etmemizi sağlar.
+
+6)grid-template-areas'ın Kurumsal Avantajı:
+Sayfanın tasarımını karmaşık sayılarla değil, kelimelerle bir kağıda kroki çizer gibi yapmamızı sağlar.
+Bu sayede kodu okumak ve sonradan değiştirmek çok kolaydır.
+Örneğin, masaüstü görünümde sağda duran bir menüyü, cep telefonunda en alta almak istiyoruz.
+Bunun için HTML (sayfanın ana iskelet) kodunu hiç bozmamıza veya değiştirmemize gerek kalmaz.
+Sadece CSS dosyanızdaki kelimelerin yerini değiştirerek tüm sayfa düzenini zahmetsizce baştan aşağı yenileyebiliriz.
+
+7)clamp() Fonksiyonunun Parametreleri
+clamp(minimum_değer, tercih_edilen_değer, maksimum_değer) şeklinde çalışır.
+Örneğin clamp(16px, 2.5vw, 24px) kuralında font boyutu ekran genişliğine (2.5vw) göre dinamik olarak değişir.
+Ancak ekran ne kadar küçülürse küçülsün font 16px'in altına inmez, ekran ne kadar büyürse büyüsün 24px'in üstüne çıkmaz.
+Kusursuz bir sıvı (fluid) tipografi ve boşluklama yöntemidir.
+
+8)Sonsuz Animasyon Kuralı:
+animation-iteration-count: infinite;
+
+9)Flutter'daki CSS Karşılıkları:
+Flexbox'ın Karşılığı: Eğer elemanları yan yana dizmek istiyorsak Row, alt alta dizmek istiyorsak Column widget'ını (bileşenini) kullanırız.
+
+CSS Grid'in Karşılığı: Elemanları satranç tahtası gibi kutucuklar halinde (ızgara şeklinde) dizmek için GridView widget'ını kullanırız.
+
+10)React Native'de CSS Grid
+Hayır, kullanılamaz. React Native'in altyapısı sadece Flexbox mantığını destekler, içinde CSS Grid sistemi yoktur.
+
+a)Uzun listelerde (Önerilen): FlatList bileşenini kullanırız ve koduna numColumns={2} (2 sütun olsun) yazarız.
+Sistem bunu otomatik olarak ızgaraya dönüştürür.
+
+b)Kısa veya sabit içeriklerde: Elemanları tutan ana kutuya "yan yana dizil" (flexDirection: 'row') ve
+"sığmayanları alt satıra at" (flexWrap: 'wrap') kurallarını veririz. İçindeki elemanlara da %50 genişlik vererek kendi 2
+sütunlu ızgaramızı oluşturmuş oluruz.
