@@ -114,7 +114,7 @@
         }
 
         h1 {
-            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
             color: var(--text-primary);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             letter-spacing: -1px;
@@ -182,15 +182,27 @@
         .menu-item.active {
             background-color: var(--brand-red);
             color: #ffffff;
-            cursor: pointer;
         }
 
         .dashboard-grid {
             display: grid;
             gap: 20px;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: 1fr;
         }
 
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+    
         .bank-card {
             padding: 24px;
             display: flex;
@@ -246,6 +258,9 @@
             color: var(--color-expense);
         }
 
+        /* -------------------------------------
+           İŞLEM GEÇMİŞİ VE SKELETON
+           ------------------------------------- */
         .transactions-panel {
             margin-top: 24px;
             padding: 24px;
@@ -350,7 +365,7 @@
                     <div class="pulse-dot"></div>
                     <span class="live-text">ACTIVE</span>
                 </div>
-                <h1>ŞahBank Financial Summary</h1>
+                <h1>ŞahBank Financial Summary</Summary></h1>
             </div>
             <span class="user-info">Shahd R. (admin)</span>
         </header>
@@ -447,10 +462,10 @@
 
         <footer class="panel">
             <h3>Contact</h3>
-            <p class="footer-text">If you need help contact us please:</p>
+            <p class="footer-text">If you have any issue please contact us:</p>
             <address class="footer-address">
                 Email: <a href="mailto:info@sahbank.com" class="footer-link">info@sahbank.com</a><br>
-                Phone: +90 212 123 45 67<br>
+                Phone No: +90 212 123 45 67<br>
                 Address: Tırmanış Sokak No: 10, İstanbul, Türkiye
             </address>
         </footer>
