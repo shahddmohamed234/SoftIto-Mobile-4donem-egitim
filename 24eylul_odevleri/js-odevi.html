@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+
+
+  <script>
+
+    const sarjVeTutarHesapla = (mevcutYuzde, hedefYuzde, bataryaKW, istasyonKW, saat, bazFiyat) => ({
+      mevcutYuz: mevcutYuzde,
+      hedefYuzde: hedefYuzde,
+      bataryaKW: bataryaKW,
+      istasyonKW: istasyonKW,
+      okunanSaat: saat,
+
+      // 3'lü Zaman Dilimi Kontrolü: 17-22 arası Puant(1.5), 22-06 arası Gece(0.6), diğerleri Gündüz(1)
+      aktifTarife: (saat >= 17 && saat < 22) ? "Puant Tarifesi"
+        : (saat >= 22 || saat < 6) ? "Gece Tarifesi"
+          : "Gündüz Tarifesi",
+
+      tarifeKatsayisi: (saat >= 17 && saat < 22) ? 1.5
+        : (saat >= 22 || saat < 6) ? 0.6
+          : 1,
+
+      // Şarj Süresi: Batarya * (Fark) / 100 / istasyonKW * 60
+      tahminiSureDakika: (mevcutYuzde >= hedefYuzde || bataryaKW <= 0 || istasyonKW <= 0)
+        ? 0
+        : (((bataryaKW * (hedefYuzde - mevcutYuzde)) / 100) / istasyonKW) * 60,
+
+      // Tutar: Çekilen Enerji * (Baz Fiyat * Katsayı)
+      tahminiTutarTL: (mevcutYuzde >= hedefYuzde || bataryaKW <= 0)
+        ? 0
+        : ((bataryaKW * (hedefYuzde - mevcutYuzde)) / 100) * (bazFiyat * ((saat >= 17 && saat < 22) ? 1.5 : (saat >= 22 || saat < 6) ? 0.6 : 1))
+    });
+
+    // TEST 1: Saat 14:00 (Gündüz - Katsayı 1) - Baz Fiyat: 10 TL
+    console.log(sarjVeTutarHesapla(20, 80, 80, 150, 14, 10));
+
+    // TEST 2: Saat 19:00 (Puant - Katsayı 1.5) - Baz Fiyat: 10 TL
+    console.log(sarjVeTutarHesapla(20, 80, 80, 150, 19, 10));
+
+    // TEST 3: Saat 02:00 (Gece - Katsayı 0.6) - Baz Fiyat: 10 TL
+    console.log(sarjVeTutarHesapla(20, 80, 80, 150, 2, 10));
+  </script>
+</body>
+
+</html>
