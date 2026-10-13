@@ -1,3 +1,4 @@
+/*
 1.createState()
 
 2.mounted == true // state ağacını başlatıyor
@@ -15,3 +16,5 @@
 8.dispose() (kalıcı olarak kapatma (controller.dispose Stream.cancel) burada yapılır). // 
 
 9.mounted == false
+
+*/
