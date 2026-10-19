@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="app_icon.png">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dijital_gunluk/build/app/intermediates/compressed_assets/debug/compressDebugAssets/out/assets/flutter_assets/assets/icon/app_icon.png.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
