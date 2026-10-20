@@ -39,19 +39,29 @@ class CarCard extends StatelessWidget {
   /// Marka, model ve müsaitlik rozeti
   Widget _buildTopRow(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${car.brand} ${car.model}',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 2),
-            Text('${car.year} Model • ${car.stationName}', style: Theme.of(context).textTheme.bodySmall),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${car.brand} ${car.model}',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '${car.year} Model • ${car.stationName}',
+                style: Theme.of(context).textTheme.bodySmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
+        const SizedBox(width: 8),
         _buildAvailabilityChip(context),
       ],
     );
@@ -80,12 +90,12 @@ class CarCard extends StatelessWidget {
 
   /// Yakıt, vites ve koltuk özellik etiketleri
   Widget _buildFeaturesRow(BuildContext context) {
-    return Row(
+    return Wrap(
+      spacing: 8,
+      runSpacing: 6,
       children: [
         _chip(context, Icons.local_gas_station_outlined, car.fuelType),
-        const SizedBox(width: 8),
         _chip(context, Icons.settings_suggest_outlined, car.transmission),
-        const SizedBox(width: 8),
         _chip(context, Icons.airline_seat_recline_normal, '${car.seats} Kişilik'),
       ],
     );
@@ -114,20 +124,25 @@ class CarCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Tarife Fiyatı', style: Theme.of(context).textTheme.bodySmall),
-            Text(
-              car.getRateLabel(pricingType),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.primary,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Tarife Fiyatı', style: Theme.of(context).textTheme.bodySmall),
+              Text(
+                car.getRateLabel(pricingType),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        const SizedBox(width: 12),
         ElevatedButton(
           onPressed: car.isAvailable ? onRent : null,
           child: const Text('Hemen Kirala'),

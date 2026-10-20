@@ -176,7 +176,9 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, onlyAvail, _) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Sadece Müsait Araçları Göster', style: TextStyle(fontSize: 13)),
+              const Expanded(
+                child: Text('Sadece Müsait Araçları Göster', style: TextStyle(fontSize: 13)),
+              ),
               Switch.adaptive(
                 value: onlyAvail,
                 onChanged: widget.controller.toggleAvailableOnly,

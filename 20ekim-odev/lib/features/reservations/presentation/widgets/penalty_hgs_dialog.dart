@@ -21,22 +21,25 @@ class PenaltyHgsDialog extends StatelessWidget {
         children: [
           Icon(Icons.toll, color: Colors.orange),
           SizedBox(width: 8),
-          Text('HGS & Ceza Detayları'),
+          Expanded(child: Text('HGS & Ceza Detayları')),
         ],
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _row('Rezervasyon Takip No', reservation.id),
-          _row('Kiralanan Araç', reservation.carModel),
-          const Divider(),
-          _row('Otoyol/Köprü HGS Tutarı', '₺${reservation.hgsAmount.toStringAsFixed(2)}'),
-          _row('Geç Teslimat Cezası', '₺${reservation.latePenaltyAmount.toStringAsFixed(2)}'),
-          const Divider(),
-          _row('Ödenecek Toplam Ekstra', '₺${reservation.totalExtraPenalties.toStringAsFixed(2)}', isBold: true),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _row('Rezervasyon Takip No', reservation.id),
+            _row('Kiralanan Araç', reservation.carModel),
+            const Divider(),
+            _row('Otoyol/Köprü HGS Tutarı', '₺${reservation.hgsAmount.toStringAsFixed(2)}'),
+            _row('Geç Teslimat Cezası', '₺${reservation.latePenaltyAmount.toStringAsFixed(2)}'),
+            const Divider(),
+            _row('Ödenecek Toplam Ekstra', '₺${reservation.totalExtraPenalties.toStringAsFixed(2)}', isBold: true),
+          ],
+        ),
       ),
+      actionsOverflowButtonSpacing: 8,
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Kapat')),
         if (reservation.totalExtraPenalties > 0)
@@ -59,8 +62,17 @@ class PenaltyHgsDialog extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-          Text(value, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            value,
+            style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+          ),
         ],
       ),
     );

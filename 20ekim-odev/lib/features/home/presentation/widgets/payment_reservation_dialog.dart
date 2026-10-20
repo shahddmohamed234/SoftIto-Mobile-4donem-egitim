@@ -54,24 +54,27 @@ class _PaymentReservationDialogState extends State<PaymentReservationDialog> {
             children: [
               Icon(Icons.security, color: Colors.blue),
               SizedBox(width: 8),
-              Text('3D Secure SMS Onayı'),
+              Expanded(child: Text('3D Secure SMS Onayı')),
             ],
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('₺${_totalPrice.toStringAsFixed(0)} tutarındaki kiralama için bankanızdan gelen 4 haneli SMS şifresini giriniz (Test: 1234):'),
-              const SizedBox(height: 12),
-              TextField(
-                controller: smsController,
-                keyboardType: TextInputType.number,
-                maxLength: 4,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 6),
-                decoration: const InputDecoration(hintText: '----', counterText: ''),
-              ),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('₺${_totalPrice.toStringAsFixed(0)} tutarındaki kiralama için bankanızdan gelen 4 haneli SMS şifresini giriniz (Test: 1234):'),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: smsController,
+                  keyboardType: TextInputType.number,
+                  maxLength: 4,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 6),
+                  decoration: const InputDecoration(hintText: '----', counterText: ''),
+                ),
+              ],
+            ),
           ),
+          actionsOverflowButtonSpacing: 8,
           actions: [
             TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('İptal')),
             ElevatedButton(
@@ -120,6 +123,7 @@ class _PaymentReservationDialogState extends State<PaymentReservationDialog> {
           ],
         ),
       ),
+      actionsOverflowButtonSpacing: 8,
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Vazgeç')),
         ElevatedButton(

@@ -53,29 +53,32 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange),
             SizedBox(width: 8),
-            Text('Erken Teslimat Uyarısı'),
+            Expanded(child: Text('Erken Teslimat Uyarısı')),
           ],
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${r.carModel} aracını planlanan tarihten önce erken teslim etmek üzeresiniz.'),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.red.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('${r.carModel} aracını planlanan tarihten önce erken teslim etmek üzeresiniz.'),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.red.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+                ),
+                child: const Text(
+                  'ÖNEMLİ KURAL: Rezervasyon sözleşmesi gereğince erken teslim edilen gün ve saatler için KESİNLİKLE ÜCRET İADESİ YAPILMAYACAKTIR.',
+                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12),
+                ),
               ),
-              child: const Text(
-                'ÖNEMLİ KURAL: Rezervasyon sözleşmesi gereğince erken teslim edilen gün ve saatler için KESİNLİKLE ÜCRET İADESİ YAPILMAYACAKTIR.',
-                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
+        actionsOverflowButtonSpacing: 8,
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Vazgeç')),
           ElevatedButton(

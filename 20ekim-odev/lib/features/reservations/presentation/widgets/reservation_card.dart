@@ -53,7 +53,14 @@ class ReservationCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(reservation.id, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey)),
+        Expanded(
+          child: Text(
+            reservation.id,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const SizedBox(width: 8),
         _buildStatusBadge(context),
       ],
     );
@@ -106,9 +113,12 @@ class ReservationCard extends StatelessWidget {
             children: [
               const Icon(Icons.timer_outlined, size: 16, color: Colors.blue),
               const SizedBox(width: 6),
-              Text(
-                'Geri Teslimat Takibi: ${reservation.remainingTimeText}',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              Expanded(
+                child: Text(
+                  'Geri Teslimat Takibi: ${reservation.remainingTimeText}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -159,14 +169,15 @@ class ReservationCard extends StatelessWidget {
         label: const Text('Ücret & HGS Detayı'),
       );
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Wrap(
+      alignment: WrapAlignment.end,
+      spacing: 8,
+      runSpacing: 8,
       children: [
         OutlinedButton(
           onPressed: onEarlyReturn,
           child: const Text('Erken Teslim'),
         ),
-        const SizedBox(width: 8),
         ElevatedButton(
           onPressed: onExtend,
           child: const Text('Süre Uzat'),

@@ -39,25 +39,28 @@ class _SmsVerificationDialogState extends State<SmsVerificationDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('SMS Doğrulama Kodu', textAlign: TextAlign.center),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '${widget.phoneNumber} numarasına gönderilen 4 haneli kodu giriniz (Test: 1234)',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _codeController,
-            keyboardType: TextInputType.number,
-            maxLength: 4,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 8),
-            decoration: const InputDecoration(hintText: '----', counterText: ''),
-          ),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              '${widget.phoneNumber} numarasına gönderilen 4 haneli kodu giriniz (Test: 1234)',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _codeController,
+              keyboardType: TextInputType.number,
+              maxLength: 4,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 8),
+              decoration: const InputDecoration(hintText: '----', counterText: ''),
+            ),
+          ],
+        ),
       ),
+      actionsOverflowButtonSpacing: 8,
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),

@@ -18,22 +18,29 @@ class StationLocationsSheet extends StatelessWidget {
   // 40 satır kuralına uygun ana build metodu
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardTheme.color,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildMapHeader(context),
-          const SizedBox(height: 14),
-          _buildInteractiveMap(context),
-          const SizedBox(height: 14),
-          Flexible(child: _buildStationList()),
-        ],
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.85,
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardTheme.color,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildMapHeader(context),
+              const SizedBox(height: 14),
+              _buildInteractiveMap(context),
+              const SizedBox(height: 14),
+              Flexible(child: _buildStationList()),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -43,12 +50,20 @@ class StationLocationsSheet extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Icon(Icons.map_outlined, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(width: 8),
-            Text('Harita Üzerinden Teslim Noktası Seçimi', style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
-          ],
+        Expanded(
+          child: Row(
+            children: [
+              Icon(Icons.map_outlined, color: Theme.of(context).colorScheme.primary),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Harita Üzerinden Teslim Noktası Seçimi',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
         IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
       ],

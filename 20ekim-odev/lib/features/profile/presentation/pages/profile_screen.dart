@@ -35,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (ctx) => AlertDialog(
         title: const Text('Çıkış Yap'),
         content: const Text('Hesabınızdan çıkış yapmak istediğinize emin misiniz? Tekrar giriş yapmanız gerekecektir.'),
+        actionsOverflowButtonSpacing: 8,
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Vazgeç')),
           ElevatedButton(

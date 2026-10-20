@@ -28,16 +28,19 @@ class _ExtendRentalDialogState extends State<ExtendRentalDialog> {
     final cost = _extraDays * _dailyRate;
     return AlertDialog(
       title: const Text('Sistem Üzerinden Süre Uzatma'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildInfoBanner(context),
-          const SizedBox(height: 12),
-          _buildDaysSelector(),
-          const SizedBox(height: 12),
-          Text('Ek Kiralama Bedeli: ₺${cost.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildInfoBanner(context),
+            const SizedBox(height: 12),
+            _buildDaysSelector(),
+            const SizedBox(height: 12),
+            Text('Ek Kiralama Bedeli: ₺${cost.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          ],
+        ),
       ),
+      actionsOverflowButtonSpacing: 8,
       actions: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text('İptal')),
         ElevatedButton(
