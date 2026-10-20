@@ -1,15 +1,23 @@
+// Flutter malzeme tasarımı kütüphanesini içeri aktarır
 import 'package:flutter/material.dart';
+// Rezervasyon veri modelini içeri aktarır
 import '../../data/models/reservation_model.dart';
+// Rezervasyon kontrolcüsünü içeri aktarır
 import '../controllers/reservations_controller.dart';
+// Sistemden süre uzatma penceresini içeri aktarır
 import '../widgets/extend_rental_dialog.dart';
+// Ceza ve HGS ödeme penceresini içeri aktarır
 import '../widgets/penalty_hgs_dialog.dart';
+// Rezervasyon kartı bileşenini içeri aktarır
 import '../widgets/reservation_card.dart';
 
 /// ReservationsScreen: Aktif ve geçmiş kiralamaların, geri teslimat takibinin,
 /// süre uzatma ve iadesiz erken teslimat işlemlerinin yönetildiği ekrandır.
 class ReservationsScreen extends StatefulWidget {
+  // Rezervasyon kontrolcüsü örneği
   final ReservationsController controller;
 
+  // ReservationsScreen sabit kurucu metodu
   const ReservationsScreen({super.key, required this.controller});
 
   @override
@@ -19,8 +27,9 @@ class ReservationsScreen extends StatefulWidget {
 class _ReservationsScreenState extends State<ReservationsScreen> {
   @override
   void initState() {
+    // Üst sınıf initState metodunu çalıştırır
     super.initState();
-    // Sayfa açıldığında rezervasyon listesini yükle
+    // Sayfa açıldığında güncel rezervasyon listesini yükler
     widget.controller.loadReservations();
   }
 
@@ -31,8 +40,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       builder: (ctx) => ExtendRentalDialog(
         reservation: r,
         onConfirm: (days, cost) async {
+          // Kontrolcü üzerinden uzatma işlemini çalıştırır
           final ok = await widget.controller.extendRental(r.id, days, cost);
           if (!mounted) return;
+          // İşlem sonucunu SnackBar ile bildirir
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(ok ? 'Kiralama süreniz sistem üzerinden $days gün uzatıldı!' : 'Hata oluştu!'),
@@ -49,6 +60,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        // Turuncu uyarı ikonu ve başlık
         title: const Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange),
@@ -56,13 +68,16 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             Expanded(child: Text('Erken Teslimat Uyarısı')),
           ],
         ),
+        // Kaydırılabilir içerik gövdesi
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Araç adı ve işlem açıklaması
               Text('${r.carModel} aracını planlanan tarihten önce erken teslim etmek üzeresiniz.'),
               const SizedBox(height: 12),
+              // Sözleşme gereği iadesizlik kuralı vurgu kutusu
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -78,15 +93,20 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
             ],
           ),
         ),
+        // Buton dikey aralığı
         actionsOverflowButtonSpacing: 8,
         actions: [
+          // Vazgeçme butonu
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Vazgeç')),
+          // İadesiz erken teslim onay butonu
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
             onPressed: () async {
               Navigator.pop(ctx);
+              // Erken teslimatı kontrolcüde gerçekleştir
               final ok = await widget.controller.earlyReturn(r.id);
               if (!mounted) return;
+              // Bilgi mesajı göster
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(ok ? 'Araç teslim edildi (Erken teslim şartı: İade yapılmadı).' : 'Hata oluştu!'),
@@ -108,8 +128,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       builder: (ctx) => PenaltyHgsDialog(
         reservation: r,
         onPay: () async {
+          // Kontrolcüde borç ödemesini gerçekleştir
           final ok = await widget.controller.payPenalties(r.id);
           if (!mounted) return;
+          // Bilgilendirme SnackBar'ı göster
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(ok ? 'HGS ve ceza borçları başarıyla ödendi!' : 'Ödeme başarısız!'),
@@ -125,11 +147,15 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Sayfa başlığı
       appBar: AppBar(title: const Text('Rezervasyonlarım')),
+      // Yükleme durumunu dinleyen reaktif yapı
       body: ValueListenableBuilder<bool>(
         valueListenable: widget.controller.isLoading,
         builder: (context, loading, _) {
+          // Yükleniyorsa gösterge bas
           if (loading) return const Center(child: CircularProgressIndicator());
+          // Çekerek yenileme (RefreshIndicator) destekli liste
           return RefreshIndicator(
             onRefresh: widget.controller.loadReservations,
             child: _buildList(),
@@ -144,9 +170,11 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
     return ValueListenableBuilder<List<ReservationModel>>(
       valueListenable: widget.controller.reservations,
       builder: (context, list, _) {
+        // Liste boşsa bilgi ver
         if (list.isEmpty) {
           return const Center(child: Text('Henüz kayıtlı rezervasyonunuz bulunmuyor.'));
         }
+        // Rezervasyonları alt alta dinamik liste olarak oluşturur
         return ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: list.length,

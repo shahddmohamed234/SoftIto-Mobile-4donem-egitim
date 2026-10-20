@@ -1,11 +1,20 @@
+// Araç veri modelini içeri aktarır
 import '../models/car_model.dart';
+// İstasyon veri modelini içeri aktarır
 import '../models/rental_station_model.dart';
 
+/// MockCarRepository: Araç filosunu, istasyon noktalarını ve filtreleme kurallarını
+/// çevrimdışı yerel mock verilerle yöneten sahte veri deposu sınıfıdır.
 class MockCarRepository {
+  // Singleton örneği: Tüm uygulama genelinde tek bir filo deposu çalışır
   static final MockCarRepository instance = MockCarRepository._();
+
+  // Dışarıdan örnekleme yapılmasını engelleyen gizli kurucu metot
   MockCarRepository._();
 
+  // Teslim alma ve iade istasyonları sabit veri listesi
   final List<RentalStationModel> _stations = const [
+    // 1. İstasyon: İstanbul Havalimanı Avrupa Yakası
     RentalStationModel(
       id: 'st_1',
       name: 'İstanbul Havalimanı (İST)',
@@ -14,6 +23,7 @@ class MockCarRepository {
       latitude: 41.2609,
       longitude: 28.7424,
     ),
+    // 2. İstasyon: Sabiha Gökçen Havalimanı Anadolu Yakası
     RentalStationModel(
       id: 'st_2',
       name: 'Sabiha Gökçen Havalimanı (SAW)',
@@ -22,6 +32,7 @@ class MockCarRepository {
       latitude: 40.8986,
       longitude: 29.3092,
     ),
+    // 3. İstasyon: Kadıköy Şube
     RentalStationModel(
       id: 'st_3',
       name: 'Kadıköy Rıhtım İstasyonu',
@@ -30,6 +41,7 @@ class MockCarRepository {
       latitude: 40.9904,
       longitude: 29.0255,
     ),
+    // 4. İstasyon: Levent Şube
     RentalStationModel(
       id: 'st_4',
       name: 'Levent Metro Şubesi',
@@ -40,7 +52,9 @@ class MockCarRepository {
     ),
   ];
 
+  // Kiralık araç filosu veri listesi
   final List<CarModel> _cars = [
+    // 1. Araç: Renault Clio Ekonomik
     const CarModel(
       id: 'car_1',
       brand: 'Renault',
@@ -55,6 +69,7 @@ class MockCarRepository {
       isAvailable: true,
       stationName: 'İstanbul Havalimanı (İST)',
     ),
+    // 2. Araç: Fiat Egea Ekonomik Dizel
     const CarModel(
       id: 'car_2',
       brand: 'Fiat',
@@ -69,6 +84,7 @@ class MockCarRepository {
       isAvailable: true,
       stationName: 'Kadıköy Rıhtım İstasyonu',
     ),
+    // 3. Araç: Toyota Corolla Çevreci Hibrit
     const CarModel(
       id: 'car_3',
       brand: 'Toyota',
@@ -83,6 +99,7 @@ class MockCarRepository {
       isAvailable: true,
       stationName: 'Levent Metro Şubesi',
     ),
+    // 4. Araç: Volkswagen Golf Konfor
     const CarModel(
       id: 'car_4',
       brand: 'Volkswagen',
@@ -97,6 +114,7 @@ class MockCarRepository {
       isAvailable: true,
       stationName: 'Sabiha Gökçen Havalimanı (SAW)',
     ),
+    // 5. Araç: Peugeot 3008 Geniş SUV
     const CarModel(
       id: 'car_5',
       brand: 'Peugeot',
@@ -111,6 +129,7 @@ class MockCarRepository {
       isAvailable: true,
       stationName: 'İstanbul Havalimanı (İST)',
     ),
+    // 6. Araç: BMW 320i Premium Lüks (Dolu durumda)
     const CarModel(
       id: 'car_6',
       brand: 'BMW',
@@ -127,20 +146,28 @@ class MockCarRepository {
     ),
   ];
 
+  /// Teslim istasyonları listesini asenkron olarak döner
   Future<List<RentalStationModel>> getStations() async {
+    // 200 ms okuma gecikmesi simülasyonu
     await Future.delayed(const Duration(milliseconds: 200));
     return _stations;
   }
 
+  /// İstasyon ve müsaitlik kriterlerine göre filtrelenmiş araç listesini döner
   Future<List<CarModel>> getCars({String? stationName, bool onlyAvailable = false}) async {
+    // 300 ms filtreleme gecikmesi simülasyonu
     await Future.delayed(const Duration(milliseconds: 300));
+    // Orijinal araba listesinin kopyasını oluştur
     var result = List<CarModel>.from(_cars);
+    // İstasyon filtresi verilmişse eşleşenleri filtrele
     if (stationName != null && stationName.isNotEmpty) {
       result = result.where((c) => c.stationName == stationName).toList();
     }
+    // Sadece müsait olanlar istenmişse dolu araçları çıkar
     if (onlyAvailable) {
       result = result.where((c) => c.isAvailable).toList();
     }
+    // Filtrelenmiş araç listesini döndür
     return result;
   }
 }
