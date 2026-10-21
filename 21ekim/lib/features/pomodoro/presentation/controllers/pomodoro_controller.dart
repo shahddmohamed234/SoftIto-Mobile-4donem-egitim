@@ -18,7 +18,7 @@ enum PomodoroStatus {
 /// Pomodoro sayacının ve odak kurallarının durumunu yöneten ChangeNotifier kontrolcüsü
 class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
   final PomodoroRepository _repository;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer;
 
   // Aktif seans durumu
   PomodoroStatus _status = PomodoroStatus.idle;
@@ -44,8 +44,17 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
   // Aktif görev bilgisi
   TaskModel? _currentTask;
 
-  PomodoroController({PomodoroRepository? repository})
-      : _repository = repository ?? PomodoroRepositoryImpl() {
+  // Molada gösterilecek sıradaki görev bilgisi
+  TaskModel? _nextTask;
+
+  // Seans başarıyla bittiğinde veya tamamlandığında tetiklenen callback
+  void Function(TaskModel task)? onTaskCompleted;
+
+  PomodoroController({
+    PomodoroRepository? repository,
+    AudioPlayer? audioPlayer,
+  })  : _repository = repository ?? PomodoroRepositoryImpl(),
+        _audioPlayer = audioPlayer ?? AudioPlayer() {
     WidgetsBinding.instance.addObserver(this);
     _updateBreakDuration();
   }
@@ -58,10 +67,19 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
   bool get isViolationDetected => _isViolationDetected;
   int get sessionViolations => _sessionViolations;
   TaskModel? get currentTask => _currentTask;
+  TaskModel? get nextTask => _nextTask;
 
-  /// Aktif görevi günceller
+  /// Aktif görevi günceller (Sadece Pomodoro beklemedeyken değiştirilebilir)
   void setCurrentTask(TaskModel? task) {
-    _currentTask = task;
+    if (_status == PomodoroStatus.idle) {
+      _currentTask = task;
+      notifyListeners();
+    }
+  }
+
+  /// Sıradaki görevi günceller (Mola ekranında gösterilir)
+  void setNextTask(TaskModel? task) {
+    _nextTask = task;
     notifyListeners();
   }
 
@@ -84,8 +102,12 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
-  /// Pomodoro seansını başlatır
-  void startSession() {
+  /// Pomodoro seansını başlatır (İsteğe bağlı seçili görevle kilitler)
+  void startSession([TaskModel? task]) {
+    if (task != null) {
+      _currentTask = task;
+    }
+    _nextTask = null;
     _status = PomodoroStatus.working;
     _isViolationDetected = false;
     _startTimer();
@@ -111,20 +133,26 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   /// Seansı erken bitirir veya sıfırlar
-  Future<void> finishSession({bool manual = false}) async {
+  Future<void> finishSession({bool manual = false, bool markCompleted = false}) async {
     _timer?.cancel();
 
     if (_status == PomodoroStatus.working || _status == PomodoroStatus.paused) {
+      final finishedTask = _currentTask;
       // Seansı veri tabanına kaydet
       final session = PomodoroSessionModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        taskId: _currentTask?.id ?? 'genel',
+        taskId: finishedTask?.id ?? 'genel',
         workDuration: _workDurationMinutes,
         breakDuration: _breakDurationMinutes,
         timestamp: DateTime.now().toIso8601String(),
         wasViolated: _isViolationDetected,
       );
       await _repository.saveSession(session);
+
+      if (markCompleted && finishedTask != null) {
+        onTaskCompleted?.call(finishedTask);
+        _currentTask = finishedTask.copyWith(isCompleted: true);
+      }
     }
 
     _status = PomodoroStatus.idle;
@@ -147,6 +175,10 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
   void finishBreakEarly() {
     _timer?.cancel();
     _status = PomodoroStatus.idle;
+    if (_nextTask != null) {
+      _currentTask = _nextTask;
+      _nextTask = null;
+    }
     _remainingSeconds = _workDurationMinutes * 60;
     notifyListeners();
   }
@@ -168,21 +200,33 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
   /// Süre dolduğunda yapılacak işlemler
   void _handleTimeUp() {
     if (_status == PomodoroStatus.working) {
+      final finishedTask = _currentTask;
       // Çalışma seansı bitti, mola başlatılır
       final session = PomodoroSessionModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        taskId: _currentTask?.id ?? 'genel',
+        taskId: finishedTask?.id ?? 'genel',
         workDuration: _workDurationMinutes,
         breakDuration: _breakDurationMinutes,
         timestamp: DateTime.now().toIso8601String(),
         wasViolated: _isViolationDetected,
       );
       _repository.saveSession(session);
+
+      // Pomodoro başarıyla tamamlandığında görevi otomatik olarak tamamla
+      if (finishedTask != null) {
+        onTaskCompleted?.call(finishedTask);
+        _currentTask = finishedTask.copyWith(isCompleted: true);
+      }
+
       startBreak();
     } else if (_status == PomodoroStatus.breaking) {
-      // Mola bitti, idle durumuna dönülür
+      // Mola bitti, idle durumuna dönülür ve sıradaki göreve geçilir
       _playAlarmSound();
       _status = PomodoroStatus.idle;
+      if (_nextTask != null) {
+        _currentTask = _nextTask;
+        _nextTask = null;
+      }
       _remainingSeconds = _workDurationMinutes * 60;
       notifyListeners();
     }

@@ -105,6 +105,20 @@ class TaskController extends ChangeNotifier {
     }
   }
 
+  /// Görevi tamamlandı olarak işaretler (Pomodoro bittiğinde tetiklenir)
+  Future<void> markTaskAsCompleted(String taskId) async {
+    final int index = _tasks.indexWhere((t) => t.id == taskId);
+    if (index != -1 && !_tasks[index].isCompleted) {
+      final TaskModel updated = _tasks[index].copyWith(isCompleted: true);
+      await _repository.updateTask(updated);
+      _tasks[index] = updated;
+      if (_selectedTask?.id == taskId) {
+        _selectedTask = updated;
+      }
+      notifyListeners();
+    }
+  }
+
   /// Görevi siler
   Future<void> deleteTask(String id) async {
     await _repository.deleteTask(id);
@@ -125,5 +139,43 @@ class TaskController extends ChangeNotifier {
   void selectTask(TaskModel task) {
     _selectedTask = task;
     notifyListeners();
+  }
+
+  /// O günün listesinde sırada ne varsa onu bulur (biten görevin yerine geçer)
+  TaskModel? getNextTask(TaskModel? currentTask) {
+    if (_tasks.isEmpty) return null;
+
+    if (currentTask != null) {
+      // 1. O günün (aynı tarihteki) tüm görevlerini al
+      final sameDayTasks = _tasks
+          .where((t) => t.date.trim() == currentTask.date.trim())
+          .toList();
+      final currentIndex = sameDayTasks.indexWhere((t) => t.id == currentTask.id);
+
+      // O günkü listede bu görevden sonra gelen ve tamamlanmamış olan ilk görev
+      if (currentIndex != -1) {
+        for (int i = currentIndex + 1; i < sameDayTasks.length; i++) {
+          if (!sameDayTasks[i].isCompleted && sameDayTasks[i].id != currentTask.id) {
+            return sameDayTasks[i];
+          }
+        }
+      }
+
+      // Eğer sonrasında yoksa, aynı günün başından itibaren tamamlanmamış başka bir görev var mı bak
+      for (final task in sameDayTasks) {
+        if (!task.isCompleted && task.id != currentTask.id) {
+          return task;
+        }
+      }
+    }
+
+    // O gün başka görev kalmadıysa, genel listedeki tamamlanmamış ilk görevi getir
+    for (final task in _tasks) {
+      if (!task.isCompleted && (currentTask == null || task.id != currentTask.id)) {
+        return task;
+      }
+    }
+
+    return null;
   }
 }

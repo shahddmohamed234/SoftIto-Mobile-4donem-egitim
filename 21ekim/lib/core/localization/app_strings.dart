@@ -75,6 +75,16 @@ class AppStrings {
     'softMelody': 'Yumuşak Melodi',
     'waterStream': 'Su Şırıltısı',
     'xylophone': 'Ksilofon',
+    'changeTask': 'Görevi Değiştir',
+    'focusing': 'Odaklanılıyor',
+    'pleaseSelectTaskFirst': 'Lütfen odaklanmaya başlamadan önce bir görev seçin.',
+    'sessionFinishedTaskCompleted': 'Tebrikler! Pomodoro tamamlandı ve görev bitti olarak işaretlendi.',
+    'confirmFinishSessionTitle': 'Seansı Bitir',
+    'confirmFinishSessionDesc': 'Pomodoro seansını sonlandırmak üzeresiniz. Görev tamamlandı olarak işaretlensin mi?',
+    'finishAndCompleteTask': 'Tamamlandı Olarak İşaretle',
+    'justFinish': 'Sadece Seansı Bitir',
+    'cannotChangeTaskDuringSession': 'Pomodoro devam ederken görev değiştirilemez!',
+    'noMoreTasks': 'Bugün için sırada başka görev yok 🎉',
   };
 
   // İngilizce Metinler Haritası
@@ -147,6 +157,16 @@ class AppStrings {
     'softMelody': 'Soft Melody',
     'waterStream': 'Water Stream',
     'xylophone': 'Xylophone',
+    'changeTask': 'Change Task',
+    'focusing': 'Focusing',
+    'pleaseSelectTaskFirst': 'Please select a task before starting focus.',
+    'sessionFinishedTaskCompleted': 'Congratulations! Pomodoro completed and task marked as done.',
+    'confirmFinishSessionTitle': 'End Session',
+    'confirmFinishSessionDesc': 'You are about to end the session. Mark the task as completed?',
+    'finishAndCompleteTask': 'Mark Completed & End',
+    'justFinish': 'Just End Session',
+    'cannotChangeTaskDuringSession': 'Cannot change task while Pomodoro is active!',
+    'noMoreTasks': 'No more tasks scheduled for today 🎉',
   };
 
   /// Geçerli süre ve mola bilgisini dile göre döndüren metot

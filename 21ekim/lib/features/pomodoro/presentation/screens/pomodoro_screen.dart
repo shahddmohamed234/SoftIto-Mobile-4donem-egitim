@@ -43,9 +43,13 @@ class PomodoroScreen extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         if (controller.status == PomodoroStatus.breaking) {
+          final nextTask = controller.nextTask ?? taskController.getNextTask(controller.currentTask);
           return Scaffold(
             appBar: AppBar(title: Text(AppStrings.get('breakSession'))),
-            body: BreakViewWidget(controller: controller),
+            body: BreakViewWidget(
+              controller: controller,
+              nextTask: nextTask,
+            ),
           );
         }
         return Scaffold(
@@ -89,7 +93,11 @@ class PomodoroScreen extends StatelessWidget {
           const SizedBox(height: 12),
           _buildEquationInfo(context),
           const SizedBox(height: 30),
-          SessionControlButtons(controller: controller),
+          SessionControlButtons(
+            controller: controller,
+            taskController: taskController,
+            onNavigateToTasks: onNavigateToTasks,
+          ),
         ],
       ),
     );
@@ -97,20 +105,121 @@ class PomodoroScreen extends StatelessWidget {
 
   Widget _buildActiveTaskCard(BuildContext context) {
     final theme = Theme.of(context);
-    final currentTask = controller.currentTask ?? taskController.selectedTask;
+    final isDark = theme.brightness == Brightness.dark;
+    final isRunning = controller.status != PomodoroStatus.idle;
+    // Seans devam ediyorsa kontrolcünün kilitli görevini gösterir
+    final currentTask = isRunning
+        ? controller.currentTask
+        : (controller.currentTask ?? taskController.selectedTask);
+    final isCompleted = currentTask?.isCompleted ?? false;
 
     return Card(
+      elevation: isRunning ? 3 : 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: isRunning
+            ? BorderSide(
+                color: isDark ? AppColors.pastelPink : AppColors.burgundy,
+                width: 1.5,
+              )
+            : BorderSide.none,
+      ),
       child: ListTile(
-        leading: const Icon(Icons.assignment_outlined, color: AppColors.burgundy),
-        title: Text(AppStrings.get('activeTask'), style: theme.textTheme.bodyMedium),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Icon(
+          isCompleted
+              ? Icons.check_circle_rounded
+              : (isRunning ? Icons.play_circle_fill_rounded : Icons.assignment_outlined),
+          color: isCompleted
+              ? AppColors.roseDust
+              : (isRunning
+                  ? (isDark ? AppColors.pastelPink : AppColors.burgundy)
+                  : AppColors.burgundy),
+          size: 30,
+        ),
+        title: Text(
+          isRunning ? AppStrings.get('workSession') : AppStrings.get('activeTask'),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: isRunning ? (isDark ? AppColors.pastelPink : AppColors.burgundy) : null,
+            fontWeight: isRunning ? FontWeight.w600 : FontWeight.normal,
+          ),
+        ),
         subtitle: Text(
           currentTask?.title ?? AppStrings.get('noTaskSelected'),
-          style: theme.textTheme.titleMedium,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            decoration: isCompleted ? TextDecoration.lineThrough : null,
+          ),
         ),
-        trailing: OutlinedButton(
-          onPressed: onNavigateToTasks,
-          child: Text(AppStrings.get('selectTask')),
+        trailing: isRunning
+            ? _buildRunningBadge(context, theme, isDark, isCompleted)
+            : OutlinedButton(
+                onPressed: onNavigateToTasks,
+                child: Text(
+                  currentTask != null
+                      ? AppStrings.get('changeTask')
+                      : AppStrings.get('selectTask'),
+                ),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildRunningBadge(
+      BuildContext context, ThemeData theme, bool isDark, bool isCompleted) {
+    if (isCompleted) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.roseDust.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.roseDust.withValues(alpha: 0.4)),
         ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.check_rounded, size: 16, color: AppColors.roseDust),
+            const SizedBox(width: 4),
+            Text(
+              AppStrings.get('completed'),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: AppColors.roseDust,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: (isDark ? AppColors.pastelPink : AppColors.burgundy)
+            .withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: (isDark ? AppColors.pastelPink : AppColors.burgundy)
+              .withValues(alpha: 0.35),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.lock_outline_rounded,
+            size: 15,
+            color: isDark ? AppColors.pastelPink : AppColors.burgundy,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            AppStrings.get('focusing'),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: isDark ? AppColors.pastelPink : AppColors.burgundy,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

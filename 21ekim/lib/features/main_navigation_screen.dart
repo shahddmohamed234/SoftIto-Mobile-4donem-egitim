@@ -30,6 +30,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
 
   void _onTabSelected(int index) {
+    if ((widget.pomodoroController.status == PomodoroStatus.working ||
+            widget.pomodoroController.status == PomodoroStatus.paused) &&
+        index != 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppStrings.get('cannotChangeTaskDuringSession')),
+          backgroundColor: AppColors.violationRed,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
     setState(() {
       _currentIndex = index;
     });
@@ -43,6 +56,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   void _navigateToTasks() {
+    if (widget.pomodoroController.status == PomodoroStatus.working ||
+        widget.pomodoroController.status == PomodoroStatus.paused) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppStrings.get('cannotChangeTaskDuringSession')),
+          backgroundColor: AppColors.violationRed,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
     setState(() {
       _currentIndex = 1;
     });

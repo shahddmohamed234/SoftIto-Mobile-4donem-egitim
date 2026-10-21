@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../../../core/localization/app_strings.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../tasks/data/models/task_model.dart';
 import '../controllers/pomodoro_controller.dart';
 import 'timer_display_widget.dart';
 
 /// Mola ekranı özel arayüzü (Yumuşak Pembe rahatlatıcı tema)
 class BreakViewWidget extends StatelessWidget {
   final PomodoroController controller;
+  final TaskModel? nextTask;
 
-  const BreakViewWidget({super.key, required this.controller});
+  const BreakViewWidget({
+    super.key,
+    required this.controller,
+    this.nextTask,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,21 +58,36 @@ class BreakViewWidget extends StatelessWidget {
   }
 
   Widget _buildNextTaskCard(ThemeData theme) {
+    final next = nextTask ?? controller.nextTask;
+    final String title = next != null
+        ? next.title
+        : AppStrings.get('noMoreTasks');
+
     return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            const Icon(Icons.next_plan_outlined, color: AppColors.burgundy),
+            Icon(
+              next != null ? Icons.next_plan_outlined : Icons.task_alt_rounded,
+              color: AppColors.burgundy,
+              size: 28,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(AppStrings.get('nextTask'), style: theme.textTheme.bodyMedium),
+                  const SizedBox(height: 2),
                   Text(
-                    controller.currentTask?.title ?? AppStrings.get('noTaskSelected'),
-                    style: theme.textTheme.titleMedium,
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: next == null ? AppColors.roseDust : null,
+                    ),
                   ),
                 ],
               ),

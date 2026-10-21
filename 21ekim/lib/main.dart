@@ -24,6 +24,22 @@ void main() async {
     pomodoroController.setCurrentTask(taskController.selectedTask);
   }
 
+  // Görev seçildiğinde veya yüklendiğinde, Pomodoro boştaysa aktif görevi senkronize et
+  taskController.addListener(() {
+    if (pomodoroController.status == PomodoroStatus.idle &&
+        pomodoroController.currentTask != taskController.selectedTask) {
+      pomodoroController.setCurrentTask(taskController.selectedTask);
+    }
+  });
+
+  // Pomodoro çalışma seansı bittiğinde görevi otomatik olarak tamamlandı olarak işaretle
+  // ve o günün listesinde sırada ne varsa onu mola ekranı için hazırla
+  pomodoroController.onTaskCompleted = (task) {
+    taskController.markTaskAsCompleted(task.id);
+    final next = taskController.getNextTask(task);
+    pomodoroController.setNextTask(next);
+  };
+
   // Ana uygulama başlatılır
   runApp(FullConcentrateApp(
     settingsController: settingsController,
