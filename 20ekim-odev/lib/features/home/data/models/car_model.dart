@@ -104,21 +104,32 @@ class CarModel {
         return dailyRate * validDays;
 
       case PricingType.weekly:
-        // Haftalık tarifede haftalık avantajlı paket baz alınır
-        if (validDays <= 7) {
+        // 7 günden az ise müşteri aleyhine yüksek tutar çıkmaması için günlük fiyat uygulanır
+        if (validDays < 7) {
+          return dailyRate * validDays;
+        }
+        if (validDays == 7) {
           return weeklyRate;
         }
-        // 7 günden fazla ise tam haftalar ve artık günler hesaplanır
+        // 7 günden fazla ise tam haftalar ve artık günler haftalık indirimli birim fiyattan hesaplanır
         final weeks = validDays ~/ 7;
         final remainingDays = validDays % 7;
         return (weeks * weeklyRate) + (remainingDays * (weeklyRate / 7.0));
 
       case PricingType.monthly:
-        // Aylık tarifede 30 günlük avantajlı paket baz alınır
-        if (validDays <= 30) {
+        // 30 günden az ise en avantajlı haftalık veya günlük tarife baz alınır
+        if (validDays < 30) {
+          if (validDays >= 7) {
+            final weeks = validDays ~/ 7;
+            final remainingDays = validDays % 7;
+            return (weeks * weeklyRate) + (remainingDays * (weeklyRate / 7.0));
+          }
+          return dailyRate * validDays;
+        }
+        if (validDays == 30) {
           return monthlyRate;
         }
-        // 30 günden fazla ise tam aylar ve artık günler hesaplanır
+        // 30 günden fazla ise tam aylar ve artık günler aylık avantajlı birim fiyattan hesaplanır
         final months = validDays ~/ 30;
         final remainingDays = validDays % 30;
         return (months * monthlyRate) + (remainingDays * (monthlyRate / 30.0));

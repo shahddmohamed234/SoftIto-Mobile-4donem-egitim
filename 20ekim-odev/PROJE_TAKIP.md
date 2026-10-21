@@ -100,3 +100,4 @@ Bu doküman, "EasyRent (Araç Kiralama Uygulaması)" projesinin gereksinimlerini
 7. **Uygulama Giriş Noktası & Test:**
    - [main.dart](file:///Users/d1-5/Desktop/SoftIto-Mobile-4donem-egitim/20ekim-odev/lib/main.dart): Auth Gate ile zorunlu Login kapısı ve sekmeli navigasyon (`NavigationBar`).
    - [widget_test.dart](file:///Users/d1-5/Desktop/SoftIto-Mobile-4donem-egitim/20ekim-odev/test/widget_test.dart): Açılışta zorunlu LoginScreen karşılamasını doğrulayan test.
+   - [calculation_test.dart](file:///Users/d1-5/Desktop/SoftIto-Mobile-4donem-egitim/20ekim-odev/test/calculation_test.dart): Fiyatlandırma, iki yönlü tarife senkronizasyonu, aynı gün kiralama ve süre uzatma birim testleri.

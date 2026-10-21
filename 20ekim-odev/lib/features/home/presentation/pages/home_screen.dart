@@ -101,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       status: ReservationStatus.active,
       totalAmount: totalCalculated,
       hasHgsPenalty: false,
+      dailyRate: car.dailyRate,
     );
 
     // Depo katmanına yeni rezervasyonu kaydeder

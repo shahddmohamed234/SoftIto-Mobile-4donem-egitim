@@ -25,6 +25,7 @@ class MockReservationRepository {
       hgsAmount: 145.50, // 15 Temmuz Şehitler Köprüsü ve Otoyol HGS
       latePenaltyAmount: 0.0,
       isPaid: true,
+      dailyRate: 1550.0,
     ),
     // 2. Örnek: Tamamlanmış ve geç teslim cezası olan kiralama
     ReservationModel(
@@ -39,6 +40,7 @@ class MockReservationRepository {
       hgsAmount: 0.0,
       latePenaltyAmount: 350.0, // Geç teslim cezası
       isPaid: true,
+      dailyRate: 1100.0,
     ),
     // 3. Örnek: Gelecek tarihli onay bekleyen kiralama
     ReservationModel(
@@ -53,6 +55,7 @@ class MockReservationRepository {
       hgsAmount: 0.0,
       latePenaltyAmount: 0.0,
       isPaid: true,
+      dailyRate: 2200.0,
     ),
   ];
 

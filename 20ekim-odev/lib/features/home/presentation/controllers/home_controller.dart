@@ -28,8 +28,8 @@ class HomeController {
   // Seçilen kiralama başlangıç ve bitiş tarih aralığını tutan reaktif bildirimci (Varsayılan: Yarından itibaren 3 gün)
   final ValueNotifier<DateTimeRange> dateRange = ValueNotifier<DateTimeRange>(
     DateTimeRange(
-      start: DateTime.now().add(const Duration(days: 1)),
-      end: DateTime.now().add(const Duration(days: 4)),
+      start: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 1),
+      end: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 4),
     ),
   );
 
@@ -71,30 +71,48 @@ class HomeController {
     // Seçili tarife tipini ata
     pricingType.value = type;
 
-    // Başlangıç tarihini al
-    final start = dateRange.value.start;
+    // Başlangıç tarihini saat/dakika olmadan saf takvim günü olarak al
+    final rawStart = dateRange.value.start;
+    final startDate = DateTime(rawStart.year, rawStart.month, rawStart.day);
+
     // Haftalık tarife seçilmiş ve gün sayısı 7'den az ise takvimi 7 güne tamamla
     if (type == PricingType.weekly && rentalDays < 7) {
-      dateRange.value = DateTimeRange(start: start, end: start.add(const Duration(days: 7)));
+      dateRange.value = DateTimeRange(
+        start: startDate,
+        end: DateTime(startDate.year, startDate.month, startDate.day + 7),
+      );
     } else if (type == PricingType.monthly && rentalDays < 30) {
       // Aylık tarife seçilmiş ve gün sayısı 30'dan az ise takvimi 30 güne tamamla
-      dateRange.value = DateTimeRange(start: start, end: start.add(const Duration(days: 30)));
+      dateRange.value = DateTimeRange(
+        start: startDate,
+        end: DateTime(startDate.year, startDate.month, startDate.day + 30),
+      );
+    } else if (type == PricingType.daily && rentalDays >= 7) {
+      // Kullanıcı günlüğe tıkladığında takvim haftalık/aylıkta kaldıysa 3 günlük standart aralığa çek
+      dateRange.value = DateTimeRange(
+        start: startDate,
+        end: DateTime(startDate.year, startDate.month, startDate.day + 3),
+      );
     }
   }
 
   /// Takvimden yeni tarih aralığı seçildiğinde çalışır ve tarifeyi akıllıca uydurur
   void setDateRange(DateTimeRange range) {
-    // Yeni tarih aralığını ata
-    dateRange.value = range;
-    // Gün farkını hesapla
-    final days = range.end.difference(range.start).inDays;
+    // Zaman damgası farklarını ve yaz/kış saati geçişlerini sıfırlamak için normalize et
+    final start = DateTime(range.start.year, range.start.month, range.start.day);
+    final end = DateTime(range.end.year, range.end.month, range.end.day);
+    dateRange.value = DateTimeRange(start: start, end: end);
 
-    // Seçilen gün sayısı 30 ve üstüyse tarife modunu otomatik olarak aylık yap
-    if (days >= 30 && pricingType.value != PricingType.monthly) {
+    // Gün farkını hatasız rentalDays üzerinden al
+    final days = rentalDays;
+
+    // Seçilen gün sayısına göre tarife modunu iki yönlü otomatik güncelle
+    if (days >= 30) {
       pricingType.value = PricingType.monthly;
-    } else if (days >= 7 && days < 30 && pricingType.value == PricingType.daily) {
-      // Seçilen gün 7 ile 30 gün arasındaysa otomatik olarak haftalık avantaja geçir
+    } else if (days >= 7) {
       pricingType.value = PricingType.weekly;
+    } else {
+      pricingType.value = PricingType.daily;
     }
   }
 
@@ -110,9 +128,11 @@ class HomeController {
     loadCars();
   }
 
-  /// Kiralama yapılacak toplam gün sayısını hesaplayan getter (En az 1 gün)
+  /// Kiralama yapılacak toplam gün sayısını hatasız hesaplayan getter (Aynı gün seçiminde dahi en az 1 gün)
   int get rentalDays {
-    final diff = dateRange.value.end.difference(dateRange.value.start).inDays;
+    final start = DateTime(dateRange.value.start.year, dateRange.value.start.month, dateRange.value.start.day);
+    final end = DateTime(dateRange.value.end.year, dateRange.value.end.month, dateRange.value.end.day);
+    final diff = (end.difference(start).inHours / 24.0).round();
     return diff > 0 ? diff : 1;
   }
 

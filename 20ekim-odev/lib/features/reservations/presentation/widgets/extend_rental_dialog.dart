@@ -29,8 +29,8 @@ class _ExtendRentalDialogState extends State<ExtendRentalDialog> {
   // Seçilen ek gün sayısı (Varsayılan 1 gün)
   int _extraDays = 1;
 
-  // Günlük ek uzatma baz ücreti (1200 TL/gün)
-  static const double _dailyRate = 1200.0;
+  // Aracın gerçek günlük uzatma ücreti
+  double get _dailyRate => widget.reservation.dailyRate > 0 ? widget.reservation.dailyRate : 1200.0;
 
   // 40 satır kuralına uygun ana build metodu
   @override
@@ -53,7 +53,7 @@ class _ExtendRentalDialogState extends State<ExtendRentalDialog> {
             _buildDaysSelector(),
             const SizedBox(height: 12),
             // Dinamik olarak hesaplanan ek kiralama bedeli
-            Text('Ek Kiralama Bedeli: ₺${cost.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            Text('Ek Kiralama Bedeli: ₺${cost.toStringAsFixed(0)} (₺${_dailyRate.toStringAsFixed(0)} / gün)', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
           ],
         ),
       ),

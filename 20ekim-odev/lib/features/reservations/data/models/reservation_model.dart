@@ -41,6 +41,9 @@ class ReservationModel {
   // Başlangıç kiralama ödemesinin tamamlanıp tamamlanmadığı
   final bool isPaid;
 
+  // Aracın süre uzatma ve günlük hesap birim fiyatı (TL)
+  final double dailyRate;
+
   // ReservationModel sabit kurucu metodu
   const ReservationModel({
     // Takip no zorunludur
@@ -65,6 +68,8 @@ class ReservationModel {
     this.latePenaltyAmount = 0.0,
     // Kiralama ücreti varsayılan olarak ödenmiştir
     this.isPaid = true,
+    // Günlük uzatma birim ücreti (Varsayılan 1200 TL)
+    this.dailyRate = 1200.0,
   });
 
   /// Varsa HGS ve gecikme cezası toplamını hesaplayan getter
@@ -101,6 +106,7 @@ class ReservationModel {
     double? hgsAmount,
     double? latePenaltyAmount,
     bool? isPaid,
+    double? dailyRate,
   }) {
     return ReservationModel(
       // id değerini güncelle veya mevcut olanı koru
@@ -125,6 +131,8 @@ class ReservationModel {
       latePenaltyAmount: latePenaltyAmount ?? this.latePenaltyAmount,
       // Ödeme durumunu güncelle veya koru
       isPaid: isPaid ?? this.isPaid,
+      // Günlük birim fiyatını güncelle veya koru
+      dailyRate: dailyRate ?? this.dailyRate,
     );
   }
 }

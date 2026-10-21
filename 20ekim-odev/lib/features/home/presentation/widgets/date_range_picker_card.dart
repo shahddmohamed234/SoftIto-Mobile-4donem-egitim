@@ -21,13 +21,16 @@ class DateRangePickerCard extends StatelessWidget {
 
   /// Flutter'ın standart tarih aralığı seçici (DateRangePicker) penceresini açar
   void _selectDates(BuildContext context) async {
+    final now = DateTime.now();
+    // Saat ve dakika bileşenlerini sıfırlayarak bugünün saf tarihini al (Assertion hatasını önler)
+    final today = DateTime(now.year, now.month, now.day);
     // Ekranda takvim aralığı seçicisini aç ve kullanıcının seçimini bekle
     final picked = await showDateRangePicker(
       context: context,
       // Seçilebilecek ilk tarih: Bugün
-      firstDate: DateTime.now(),
+      firstDate: today,
       // Seçilebilecek son tarih: Bugünden itibaren 180 gün (yaklaşık 6 ay)
-      lastDate: DateTime.now().add(const Duration(days: 180)),
+      lastDate: today.add(const Duration(days: 180)),
       // Başlangıçta işaretli olacak tarih aralığı
       initialDateRange: dateRange,
     );
@@ -43,8 +46,11 @@ class DateRangePickerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Başlangıç ve bitiş arasındaki net gün sayısını hesaplar
-    final days = dateRange.end.difference(dateRange.start).inDays;
+    // Saat/dakika sapmalarından etkilenmeden başlangıç ve bitiş arasındaki net gün sayısını hesaplar (En az 1 gün)
+    final start = DateTime(dateRange.start.year, dateRange.start.month, dateRange.start.day);
+    final end = DateTime(dateRange.end.year, dateRange.end.month, dateRange.end.day);
+    final diff = (end.difference(start).inHours / 24.0).round();
+    final days = diff > 0 ? diff : 1;
     return Card(
       // Tıklanma dalgalanma efekti (Ripple) sağlayan InkWell
       child: InkWell(
