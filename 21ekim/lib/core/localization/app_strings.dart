@@ -1,0 +1,170 @@
+/// Uygulama içi çoklu dil (TR/EN) metin sözlüğü
+/// 
+/// Dış bağımlılıklara ihtiyaç duymadan temiz ve merkezi bir yapı sunar.
+class AppStrings {
+  // Aktif dil kodu (varsayılan: 'tr')
+  static String currentLanguage = 'tr';
+
+  // Türkçe Metinler Haritası
+  static const Map<String, String> _tr = {
+    'appName': 'Full Concentrate',
+    'pomodoroTab': 'Sayaç',
+    'tasksTab': 'Görevler',
+    'analyticsTab': 'Analitik',
+    'settingsTab': 'Ayarlar',
+    'start': 'BAŞLAT',
+    'pause': 'DURAKLAT',
+    'resume': 'DEVAM ET',
+    'finish': 'BİTİR',
+    'earlyFinish': 'Molayı Erken Bitir',
+    'activeTask': 'Aktif Görev',
+    'noTaskSelected': 'Henüz bir görev seçilmedi',
+    'selectTask': 'Görev Seç',
+    'workSession': 'Odaklanma Seansı',
+    'breakSession': 'Mola Zamanı',
+    'violationWarning': 'UYARI: Odaklanma seansı sürerken uygulamadan çıkamazsınız!',
+    'violationNotice': 'Odaklanma seansını böldünüz! Lütfen seansı tamamlayana kadar ayrılmayın.',
+    'beforeStartNotice': 'DİKKAT: Pomodoro başladığında bitene kadar uygulamadan çıkılamaz. Sadece mola sürelerinde çıkışa izin verilir.',
+    'understandContinue': 'Anladım, Odaklanmaya Devam Et',
+    'nextTask': 'Sıradaki Görev',
+    'saveAndGoToPomodoro': 'Kaydet ve Pomodoro Sayfasına Git',
+    'addNewTask': 'Yeni Görev Ekle',
+    'taskTitle': 'Görev Başlığı',
+    'taskDate': 'Görev Tarihi (DD.MM.YYYY)',
+    'cancel': 'İptal',
+    'save': 'Kaydet',
+    'daily': 'Günlük',
+    'weekly': 'Haftalık',
+    'monthly': 'Aylık',
+    'totalFocusTime': 'Toplam Çalışma',
+    'completedSessions': 'Tamamlanan Seans',
+    'violationsCount': 'İhlal Sayısı',
+    'language': 'Dil Seçimi',
+    'darkMode': 'Karanlık Mod',
+    'soundLevel': 'Alarm Ses Seviyesi',
+    'pomodoroSound': 'Pomodoro Alarm Sesi',
+    'breakSound': 'Mola Alarm Sesi',
+    'minutes': 'dk',
+    'hours': 'saat',
+    'sessionHistory': 'Çalışma Seansı Geçmişi',
+    'noSessionsYet': 'Henüz kaydedilmiş bir çalışma seansı yok.',
+    'changeDuration': 'Süreyi Değiştir',
+    'setWorkDuration': 'Çalışma Süresini Ayarla',
+    'focusDurationMinutes': 'Odaklanma Süresi (Dakika)',
+    'min25Notice': 'En az 25',
+    'durationMinWarning': 'UYARI: Minimum çalışma süresi 25 dakikadır! 25 dakikadan daha az bir süre belirlenemez.',
+    'noTaskFolderYet': 'Henüz görev klasörü yok',
+    'noTaskFolderDesc': 'Aşağıdaki "Yeni Görev Ekle" butonuna basarak tarihli görevinizi oluşturabilirsiniz.',
+    'enterTaskTitleError': 'Lütfen bir görev başlığı girin.',
+    'tasksCount': 'Görev',
+    'completed': 'Tamamlandı',
+    'focusWork': 'Çalışma',
+    'breakWord': 'Mola',
+    'automaticCalc': 'Otomatik Hesap',
+    'averageSession': 'Ortalama Seans',
+    'successRate': 'Başarı Oranı',
+    'totalBreak': 'Toplam Mola',
+    'productivityInsight': 'Verimlilik Analiz Özeti',
+    'insightExcellent': 'Mükemmel! Seanslarınızı hiç bölmeden %100 odaklanma disipliniyle tamamladınız.',
+    'insightGood': 'Tebrikler! Odaklanma hedeflerinize başarıyla ilerliyorsunuz.',
+    'insightWarning': 'Dikkat dağınıklığı tespit edildi. Molalar dışında uygulamadan ayrılmamaya özen gösterin.',
+    'insightEmpty': 'Bu dönemde henüz kaydedilmiş bir seansınız yok. Hemen yeni bir odak seansı başlatın!',
+    'classicBell': 'Klasik Çan',
+    'digitalBeep': 'Dijital Bip',
+    'natureBird': 'Doğa Kuş',
+    'softMelody': 'Yumuşak Melodi',
+    'waterStream': 'Su Şırıltısı',
+    'xylophone': 'Ksilofon',
+  };
+
+  // İngilizce Metinler Haritası
+  static const Map<String, String> _en = {
+    'appName': 'Full Concentrate',
+    'pomodoroTab': 'Timer',
+    'tasksTab': 'Tasks',
+    'analyticsTab': 'Analytics',
+    'settingsTab': 'Settings',
+    'start': 'START',
+    'pause': 'PAUSE',
+    'resume': 'RESUME',
+    'finish': 'FINISH',
+    'earlyFinish': 'Finish Break Early',
+    'activeTask': 'Active Task',
+    'noTaskSelected': 'No task selected yet',
+    'selectTask': 'Select Task',
+    'workSession': 'Focus Session',
+    'breakSession': 'Break Time',
+    'violationWarning': 'WARNING: You cannot leave the app while focus session is active!',
+    'violationNotice': 'You interrupted the focus session! Please stay until the timer ends.',
+    'beforeStartNotice': 'NOTICE: Once the Pomodoro starts, leaving the app is prohibited until it ends. Leaving is only permitted during breaks.',
+    'understandContinue': 'I Understand, Keep Focusing',
+    'nextTask': 'Next Task',
+    'saveAndGoToPomodoro': 'Save & Go to Pomodoro',
+    'addNewTask': 'Add New Task',
+    'taskTitle': 'Task Title',
+    'taskDate': 'Task Date (DD.MM.YYYY)',
+    'cancel': 'Cancel',
+    'save': 'Save',
+    'daily': 'Daily',
+    'weekly': 'Weekly',
+    'monthly': 'Monthly',
+    'totalFocusTime': 'Total Study Time',
+    'completedSessions': 'Completed Sessions',
+    'violationsCount': 'Violations',
+    'language': 'Language Selection',
+    'darkMode': 'Dark Mode',
+    'soundLevel': 'Alarm Volume',
+    'pomodoroSound': 'Pomodoro Alarm Sound',
+    'breakSound': 'Break Alarm Sound',
+    'minutes': 'min',
+    'hours': 'hours',
+    'sessionHistory': 'Study Session History',
+    'noSessionsYet': 'No recorded study sessions yet.',
+    'changeDuration': 'Change Duration',
+    'setWorkDuration': 'Set Focus Duration',
+    'focusDurationMinutes': 'Focus Duration (Minutes)',
+    'min25Notice': 'At least 25',
+    'durationMinWarning': 'WARNING: Minimum focus duration is 25 minutes! You cannot set less than 25 minutes.',
+    'noTaskFolderYet': 'No task folders yet',
+    'noTaskFolderDesc': 'You can create your dated tasks using the "Add New Task" button below.',
+    'enterTaskTitleError': 'Please enter a task title.',
+    'tasksCount': 'Tasks',
+    'completed': 'Completed',
+    'focusWork': 'Study',
+    'breakWord': 'Break',
+    'automaticCalc': 'Auto Calculated',
+    'averageSession': 'Avg Session',
+    'successRate': 'Success Rate',
+    'totalBreak': 'Total Break',
+    'productivityInsight': 'Productivity Insight',
+    'insightExcellent': 'Excellent! You completed your sessions with 100% focus discipline without interruption.',
+    'insightGood': 'Great job! You are making steady progress toward your study goals.',
+    'insightWarning': 'Distraction detected. Try to stay inside the app until the scheduled break.',
+    'insightEmpty': 'No sessions recorded for this period yet. Start a new focus session now!',
+    'classicBell': 'Classic Bell',
+    'digitalBeep': 'Digital Beep',
+    'natureBird': 'Nature Birds',
+    'softMelody': 'Soft Melody',
+    'waterStream': 'Water Stream',
+    'xylophone': 'Xylophone',
+  };
+
+  /// Geçerli süre ve mola bilgisini dile göre döndüren metot
+  static String getValidDurationNotice(int workMinutes, int breakMinutes) {
+    if (currentLanguage == 'en') {
+      return '✓ Valid Duration: $workMinutes min focus yields $breakMinutes min break.';
+    } else {
+      return '✓ Geçerli Süre: $workMinutes dk odaklanma için $breakMinutes dk mola hesaplanacaktır.';
+    }
+  }
+
+  /// Anahtar kelimeye ve seçili dile göre uygun metni getiren metot
+  static String get(String key) {
+    if (currentLanguage == 'en') {
+      return _en[key] ?? key;
+    } else {
+      return _tr[key] ?? key;
+    }
+  }
+}
+
