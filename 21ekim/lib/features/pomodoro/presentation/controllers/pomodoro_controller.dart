@@ -163,7 +163,7 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Mola moduna geçiş yapar
   void startBreak() {
-    _playAlarmSound();
+    _playWorkEndSound();
     _status = PomodoroStatus.breaking;
     _remainingSeconds = _breakDurationMinutes * 60;
     _isViolationDetected = false; // Molada çıkış ihlal sayılmaz
@@ -221,7 +221,7 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
       startBreak();
     } else if (_status == PomodoroStatus.breaking) {
       // Mola bitti, idle durumuna dönülür ve sıradaki göreve geçilir
-      _playAlarmSound();
+      _playBreakEndSound();
       _status = PomodoroStatus.idle;
       if (_nextTask != null) {
         _currentTask = _nextTask;
@@ -232,10 +232,25 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
+  /// Pomodoro bittiğinde (mola başlarken) çalan ses
+  void _playWorkEndSound() {
+    _playSound('audio/work_end.wav');
+  }
+
+  /// Mola bittiğinde (tekrar çalışma/boş duruma geçerken) çalan ses
+  void _playBreakEndSound() {
+    _playSound('audio/break_end.wav');
+  }
+
   /// Alarm çalma fonksiyonu
   void _playAlarmSound() {
+    _playSound('audio/alarm.wav');
+  }
+
+  void _playSound(String assetPath) {
     try {
-      _audioPlayer.play(AssetSource('audio/alarm.mp3'));
+      _audioPlayer.stop();
+      _audioPlayer.play(AssetSource(assetPath));
     } catch (_) {
       // Ses dosyası yoksa veya hata verirse sessizce devam eder
     }
@@ -256,10 +271,14 @@ class PomodoroController extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
-  /// İhlal uyarısını temizler (kullanıcı uyarıyı onaylayıp döndüğünde)
+  /// İhlal uyarısını temizler ve duraklatılan seansa devam eder
   void acknowledgeViolation() {
     _isViolationDetected = false;
-    notifyListeners();
+    if (_status == PomodoroStatus.paused) {
+      resumeSession();
+    } else {
+      notifyListeners();
+    }
   }
 
   @override
