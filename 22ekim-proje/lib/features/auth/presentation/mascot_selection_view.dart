@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/localization/app_strings.dart';
 import '../../../core/state/app_state.dart';
 import '../../navigation/app_navigation_scaffold.dart';
 
@@ -29,7 +31,7 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Maskotunu Seç'),
+        title: Text(AppStrings.tr('mascot_select_title')),
       ),
       body: SafeArea(
         child: Column(
@@ -51,7 +53,7 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
       child: Column(
         children: [
           Text(
-            'Sana Yol Arkadaşlığı Edecek Kedini Seç',
+            AppStrings.tr('mascot_select_intro_title'),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -59,11 +61,9 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Seçtiğin kedi her gün hedeflerinde seni izleyecek ve motive edecek!',
+            AppStrings.tr('mascot_select_intro_subtitle'),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.black54,
-                ),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       ),
@@ -83,13 +83,14 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
   }
 
   Widget _buildMascotCard(BuildContext context, CatMascot mascot, bool isSelected) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final Color borderColor;
     final double borderWidth;
     if (isSelected) {
       borderColor = Theme.of(context).colorScheme.primary;
       borderWidth = 2.5;
     } else {
-      borderColor = Colors.black12;
+      borderColor = isDark ? const Color(0xFF373A47) : Colors.black12;
       borderWidth = 1.0;
     }
 
@@ -103,12 +104,12 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
         margin: const EdgeInsets.only(bottom: 14.0),
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: borderColor, width: borderWidth),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(isSelected ? 25 : 8),
+              color: Colors.black.withAlpha(isSelected ? (isDark ? 50 : 25) : 8),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -116,7 +117,7 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
         ),
         child: Row(
           children: [
-            _buildCatAvatar(mascot),
+            _buildCatAvatar(context, mascot),
             const SizedBox(width: 14),
             Expanded(child: _buildCatDetails(context, mascot)),
             _buildSelectionCheck(context, isSelected),
@@ -126,24 +127,29 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
     );
   }
 
-  Widget _buildCatAvatar(CatMascot mascot) {
+  Widget _buildCatAvatar(BuildContext context, CatMascot mascot) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      width: 68,
-      height: 68,
-      decoration: const BoxDecoration(
+      width: 72,
+      height: 72,
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Color(0xFFF9F6F0),
+        color: isDark ? const Color(0xFF2C2E38) : const Color(0xFFF9F6F0),
       ),
       child: ClipOval(
-        child: Image.asset(
-          mascot.assetPath,
-          fit: BoxFit.cover,
+        child: Lottie.asset(
+          mascot.lottieAssetPath,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) => Image.asset(mascot.assetPath, fit: BoxFit.cover),
         ),
       ),
     );
   }
 
   Widget _buildCatDetails(BuildContext context, CatMascot mascot) {
+    final lang = AppState.instance.language;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,10 +161,8 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
         ),
         const SizedBox(height: 4),
         Text(
-          mascot.personality,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.black54,
-              ),
+          mascot.getPersonality(lang),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(height: 6),
         Container(
@@ -168,7 +172,7 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
-            '"${mascot.greeting}"',
+            '"${mascot.getGreeting(lang)}"',
             style: TextStyle(
               fontSize: 11,
               fontStyle: FontStyle.italic,
@@ -181,6 +185,8 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
   }
 
   Widget _buildSelectionCheck(BuildContext context, bool isSelected) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (isSelected) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -198,7 +204,10 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
         height: 24,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.black26, width: 1.5),
+          border: Border.all(
+            color: isDark ? Colors.white30 : Colors.black26,
+            width: 1.5,
+          ),
         ),
       );
     }
@@ -211,7 +220,7 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: _saveSelection,
-          child: const Text('Bu Kediyi Seç ve Devam Et'),
+          child: Text(AppStrings.tr('mascot_confirm_btn')),
         ),
       ),
     );
@@ -221,10 +230,11 @@ class _MascotSelectionViewState extends State<MascotSelectionView> {
     await AppState.instance.selectMascot(_currentSelectedId);
     if (mounted) {
       if (widget.isFromRegister) {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (_) => const AppNavigationScaffold(),
           ),
+          (route) => false,
         );
       } else {
         Navigator.of(context).pop();

@@ -15,11 +15,18 @@ class GoOnApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Go On',
-      debugShowCheckedModeBanner: false,
-      theme: appTheme,
-      home: const AuthGate(),
+    return ListenableBuilder(
+      listenable: AppState.instance,
+      builder: (context, _) {
+        return MaterialApp(
+          title: 'Go On',
+          debugShowCheckedModeBanner: false,
+          theme: appTheme,
+          darkTheme: darkAppTheme,
+          themeMode: AppState.instance.themeMode,
+          home: const AuthGate(),
+        );
+      },
     );
   }
 }

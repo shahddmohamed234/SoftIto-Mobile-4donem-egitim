@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/app_strings.dart';
+import '../../core/state/app_state.dart';
 import '../calendar/presentation/calendar_view.dart';
 import '../home/presentation/home_view.dart';
 import '../motivation/presentation/motivation_view.dart';
@@ -27,51 +29,56 @@ class _AppNavigationScaffoldState extends State<AppNavigationScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _views,
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Bugün',
+    return ListenableBuilder(
+      listenable: AppState.instance,
+      builder: (context, _) {
+        return Scaffold(
+          body: IndexedStack(
+            index: _currentIndex,
+            children: _views,
           ),
-          NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart),
-            label: 'İstatistik',
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            destinations: [
+              NavigationDestination(
+                icon: const Icon(Icons.home_outlined),
+                selectedIcon: const Icon(Icons.home),
+                label: AppStrings.tr('nav_today'),
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.bar_chart_outlined),
+                selectedIcon: const Icon(Icons.bar_chart),
+                label: AppStrings.tr('nav_stats'),
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.calendar_month_outlined),
+                selectedIcon: const Icon(Icons.calendar_month),
+                label: AppStrings.tr('nav_calendar'),
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.military_tech_outlined),
+                selectedIcon: const Icon(Icons.military_tech),
+                label: AppStrings.tr('nav_rewards'),
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.spa_outlined),
+                selectedIcon: const Icon(Icons.spa),
+                label: AppStrings.tr('nav_inspiration'),
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.person_outline),
+                selectedIcon: const Icon(Icons.person),
+                label: AppStrings.tr('nav_profile'),
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
-            label: 'Takvim',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.military_tech_outlined),
-            selectedIcon: Icon(Icons.military_tech),
-            label: 'Ödüller',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.spa_outlined),
-            selectedIcon: Icon(Icons.spa),
-            label: 'İlham',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

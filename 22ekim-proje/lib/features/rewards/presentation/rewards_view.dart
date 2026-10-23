@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/localization/app_strings.dart';
 import '../../../core/presentation/layouts/base_layout_with_cat.dart';
 import '../../../core/state/app_state.dart';
 import 'widgets/reward_badge_widget.dart';
@@ -20,7 +21,8 @@ class RewardsView extends StatelessWidget {
 
         return BaseLayoutWithCat(
           catAsset: mascot.assetPath,
-          message: '${mascot.name}: Ödülleri hak ettin!',
+          catLottieAsset: mascot.lottieAssetPath,
+          message: '${mascot.name}: ${AppStrings.tr('cat_deserve_rewards')}',
           catAlignment: Alignment.bottomRight,
           child: SafeArea(
             child: SingleChildScrollView(
@@ -47,23 +49,23 @@ class RewardsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Rozetler ve Kuponlar 🎁',
+          AppStrings.tr('rewards_title'),
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w800,
               ),
         ),
         const SizedBox(height: 4),
         Text(
-          'Serilerini koruyarak başarı rozetlerini ve gerçek indirim kuponlarını aç!',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.black54,
-              ),
+          AppStrings.tr('rewards_subtitle'),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
     );
   }
 
   Widget _buildBadgesSection(BuildContext context, List<Map<String, dynamic>> badges) {
+    final isEn = AppState.instance.language == 'EN';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -72,7 +74,7 @@ class RewardsView extends StatelessWidget {
             Icon(Icons.military_tech, color: Theme.of(context).colorScheme.secondary),
             const SizedBox(width: 8),
             Text(
-              'Başarı Rozetleri',
+              AppStrings.tr('achievement_badges'),
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -93,8 +95,12 @@ class RewardsView extends StatelessWidget {
           itemBuilder: (context, index) {
             final badge = badges[index];
             final bool isUnlocked = badge['isUnlocked'] ?? false;
-            final String title = badge['title'] ?? '';
-            final String desc = badge['description'] ?? '';
+            final String title = isEn && badge['titleEn'] != null
+                ? badge['titleEn']!
+                : (badge['title'] ?? '');
+            final String desc = isEn && badge['descriptionEn'] != null
+                ? badge['descriptionEn']!
+                : (badge['description'] ?? '');
 
             return RewardBadgeWidget(
               badgeName: title,
@@ -116,7 +122,7 @@ class RewardsView extends StatelessWidget {
             Icon(Icons.confirmation_number_outlined, color: Theme.of(context).colorScheme.secondary),
             const SizedBox(width: 8),
             Text(
-              'Aylık Gerçek İndirim Kuponları',
+              AppStrings.tr('monthly_coupons'),
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -139,15 +145,22 @@ class RewardsView extends StatelessWidget {
 
   Widget _buildCouponCard(BuildContext context, Map<String, dynamic> coupon) {
     final bool isUnlocked = coupon['isUnlocked'] ?? false;
-    final String title = coupon['title'] ?? '';
-    final String desc = coupon['description'] ?? '';
-    final String code = coupon['discountCode'] ?? 'KİLİTLİ';
+    final isEn = AppState.instance.language == 'EN';
+    final String title = isEn && coupon['titleEn'] != null
+        ? coupon['titleEn']!
+        : (coupon['title'] ?? '');
+    final String desc = isEn && coupon['descriptionEn'] != null
+        ? coupon['descriptionEn']!
+        : (coupon['description'] ?? '');
+    final String code = isUnlocked
+        ? (coupon['discountCode'] ?? '')
+        : AppStrings.tr('coupon_code_locked');
 
     final double cardOpacity;
     if (isUnlocked) {
       cardOpacity = 1.0;
     } else {
-      cardOpacity = 0.35;
+      cardOpacity = 0.45;
     }
 
     return Opacity(
@@ -156,7 +169,7 @@ class RewardsView extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: Theme.of(context).colorScheme.secondary.withAlpha(90),
@@ -186,9 +199,7 @@ class RewardsView extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     desc,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.black54,
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 6),
                   _buildCouponCodeRow(context, isUnlocked, code),
@@ -202,22 +213,27 @@ class RewardsView extends StatelessWidget {
   }
 
   Widget _buildCouponCodeRow(BuildContext context, bool isUnlocked, String code) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (isUnlocked) {
       return Row(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1EDE6),
+              color: isDark ? const Color(0xFF2C2E38) : const Color(0xFFF1EDE6),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFE4DFD6)),
+              border: Border.all(
+                color: isDark ? const Color(0xFF373A47) : const Color(0xFFE4DFD6),
+              ),
             ),
             child: Text(
               code,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.1,
                 fontSize: 12,
+                color: isDark ? Colors.white : const Color(0xFF3A3A3A),
               ),
             ),
           ),
@@ -226,19 +242,23 @@ class RewardsView extends StatelessWidget {
             onTap: () {
               Clipboard.setData(ClipboardData(text: code));
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Kupon kodu kopyalandı!'),
-                  duration: Duration(seconds: 1),
+                SnackBar(
+                  content: Text(AppStrings.tr('coupon_copied')),
+                  duration: const Duration(seconds: 1),
                 ),
               );
             },
-            child: const Icon(Icons.copy, size: 18, color: Colors.black54),
+            child: Icon(
+              Icons.copy,
+              size: 18,
+              color: isDark ? Colors.white70 : Colors.black54,
+            ),
           ),
         ],
       );
     } else {
       return Text(
-        '🔒 Tam ay serisi tamamlandığında açılır',
+        AppStrings.tr('coupon_locked'),
         style: TextStyle(
           color: Theme.of(context).colorScheme.secondary,
           fontSize: 11,

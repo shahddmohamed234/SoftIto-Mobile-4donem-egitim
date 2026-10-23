@@ -48,7 +48,7 @@ class JsonStorageService {
         'mascotId': 'pamuk',
         'language': 'TR',
         'theme': 'light',
-        'isLoggedIn': true,
+        'isLoggedIn': false,
       };
       await file.writeAsString(jsonEncode(defaultUser));
     }
@@ -58,41 +58,7 @@ class JsonStorageService {
     final file = await _getFile('habits.json');
     final exists = await file.exists();
     if (!exists) {
-      final defaultHabits = [
-        {
-          'id': 'h_1',
-          'name': 'Kitap Okuma (30 dk)',
-          'emoji': '📚',
-          'category': 'Gelişim',
-          'totalCount': 12,
-          'isDoneToday': true,
-        },
-        {
-          'id': 'h_2',
-          'name': 'Sabah Yürüyüşü',
-          'emoji': '🚶‍♀️',
-          'category': 'Spor',
-          'totalCount': 8,
-          'isDoneToday': true,
-        },
-        {
-          'id': 'h_3',
-          'name': '2 Litre Su',
-          'emoji': '💧',
-          'category': 'Sağlık',
-          'totalCount': 15,
-          'isDoneToday': false,
-        },
-        {
-          'id': 'h_4',
-          'name': 'Günlük Tutma',
-          'emoji': '✍️',
-          'category': 'Farkındalık',
-          'totalCount': 5,
-          'isDoneToday': false,
-        },
-      ];
-      await file.writeAsString(jsonEncode(defaultHabits));
+      await file.writeAsString(jsonEncode([]));
     }
   }
 

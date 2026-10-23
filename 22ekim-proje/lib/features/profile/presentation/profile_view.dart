@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/localization/app_strings.dart';
 import '../../../core/presentation/layouts/base_layout_with_cat.dart';
 import '../../../core/state/app_state.dart';
+import '../../auth/presentation/login_view.dart';
 import '../../auth/presentation/mascot_selection_view.dart';
 
-class ProfileView extends StatefulWidget {
+class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
-
-  @override
-  State<ProfileView> createState() => _ProfileViewState();
-}
-
-class _ProfileViewState extends State<ProfileView> {
-  String _selectedLanguage = 'TR';
-  String _selectedTheme = 'Açık Pastel';
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +17,20 @@ class _ProfileViewState extends State<ProfileView> {
       builder: (context, _) {
         final user = AppState.instance.user;
         final mascot = AppState.instance.selectedMascot;
+        final currentLang = AppState.instance.language;
+        final isDark = AppState.instance.themeMode == ThemeMode.dark;
+        final currentThemeLabel = isDark
+            ? (currentLang == 'EN' ? 'Calm Night (Dark)' : 'Sakin Gece (Koyu)')
+            : (currentLang == 'EN' ? 'Light Pastel' : 'Açık Pastel');
 
         return BaseLayoutWithCat(
           catAsset: mascot.assetPath,
-          message: '${mascot.name}: Profilin burada!',
+          catLottieAsset: mascot.lottieAssetPath,
+          message: '${mascot.name}: ${AppStrings.tr('cat_purr')}',
           catAlignment: Alignment.bottomRight,
           child: SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(18, 16, 18, 90),
+              padding: const EdgeInsets.fromLTRB(18, 16, 18, 100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -37,7 +38,7 @@ class _ProfileViewState extends State<ProfileView> {
                   const SizedBox(height: 18),
                   _buildUserInfoCard(context, user, mascot),
                   const SizedBox(height: 20),
-                  _buildSettingsSection(context),
+                  _buildSettingsSection(context, currentLang, currentThemeLabel, isDark),
                   const SizedBox(height: 20),
                   _buildFaqSection(context),
                   const SizedBox(height: 24),
@@ -56,17 +57,15 @@ class _ProfileViewState extends State<ProfileView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Profil ve Ayarlar ⚙️',
+          AppStrings.tr('profile_title'),
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w800,
               ),
         ),
         const SizedBox(height: 4),
         Text(
-          'Hesap bilgilerini ve uygulama tercihlerini yönet.',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.black54,
-              ),
+          AppStrings.tr('profile_subtitle'),
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
     );
@@ -76,13 +75,16 @@ class _ProfileViewState extends State<ProfileView> {
     final name = user['name'] ?? 'Kullanıcı';
     final surname = user['surname'] ?? '';
     final email = user['email'] ?? 'goon@example.com';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE4DFD6)),
+        border: Border.all(
+          color: isDark ? const Color(0xFF373A47) : const Color(0xFFE4DFD6),
+        ),
       ),
       child: Row(
         children: [
@@ -101,9 +103,7 @@ class _ProfileViewState extends State<ProfileView> {
                 const SizedBox(height: 2),
                 Text(
                   email,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.black54,
-                      ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 6),
                 _buildChangeMascotButton(context, mascot.name),
@@ -116,15 +116,21 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget _buildMascotAvatar(BuildContext context, CatMascot mascot) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       width: 64,
       height: 64,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Color(0xFFF9F6F0),
+        color: isDark ? const Color(0xFF2C2E38) : const Color(0xFFF9F6F0),
       ),
       child: ClipOval(
-        child: Image.asset(mascot.assetPath, fit: BoxFit.cover),
+        child: Lottie.asset(
+          mascot.lottieAssetPath,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) => Image.asset(mascot.assetPath, fit: BoxFit.cover),
+        ),
       ),
     );
   }
@@ -144,7 +150,7 @@ class _ProfileViewState extends State<ProfileView> {
           Icon(Icons.pets, size: 14, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 4),
           Text(
-            'Maskot: $mascotName (Değiştir)',
+            '${AppStrings.tr('mascot_label')}: $mascotName (${AppStrings.tr('change_mascot')})',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -156,12 +162,21 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget _buildSettingsSection(BuildContext context) {
+  Widget _buildSettingsSection(
+    BuildContext context,
+    String currentLang,
+    String currentThemeLabel,
+    bool isDark,
+  ) {
+    final themeOptions = currentLang == 'EN'
+        ? const ['Light Pastel', 'Calm Night (Dark)']
+        : const ['Açık Pastel', 'Sakin Gece (Koyu)'];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Uygulama Tercihleri',
+          AppStrings.tr('preferences_title'),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -169,31 +184,41 @@ class _ProfileViewState extends State<ProfileView> {
         ),
         const SizedBox(height: 10),
         Material(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          color: Theme.of(context).cardColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(color: Color(0xFFE4DFD6)),
+            side: BorderSide(
+              color: isDark ? const Color(0xFF373A47) : const Color(0xFFE4DFD6),
+            ),
           ),
           child: Column(
             children: [
               _buildDropdownTile(
-                title: 'Uygulama Dili',
+                title: AppStrings.tr('app_language'),
                 icon: Icons.language,
-                value: _selectedLanguage,
+                value: currentLang,
                 items: const ['TR', 'EN'],
                 onChanged: (val) {
-                  if (val != null) setState(() => _selectedLanguage = val);
+                  if (val != null) {
+                    AppState.instance.setLanguage(val);
+                  }
                 },
               ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
+              Divider(
+                height: 1,
+                indent: 16,
+                endIndent: 16,
+                color: isDark ? const Color(0xFF373A47) : const Color(0xFFE4DFD6),
+              ),
               _buildDropdownTile(
-                title: 'Tema Seçimi',
+                title: AppStrings.tr('theme_selection'),
                 icon: Icons.palette_outlined,
-                value: _selectedTheme,
-                items: const ['Açık Pastel', 'Sakin Gece'],
+                value: themeOptions.contains(currentThemeLabel) ? currentThemeLabel : themeOptions.first,
+                items: themeOptions,
                 onChanged: (val) {
-                  if (val != null) setState(() => _selectedTheme = val);
+                  if (val != null) {
+                    AppState.instance.setTheme(val);
+                  }
                 },
               ),
             ],
@@ -227,32 +252,32 @@ class _ProfileViewState extends State<ProfileView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sıkça Sorulan Sorular (SSS)',
+          AppStrings.tr('faq_title'),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
         ),
         const SizedBox(height: 10),
-        _buildFaqItem('Streak (Seri) nasıl çalışır?',
-            'Her gün en az bir alışkanlığını tamamladığında serin 1 gün artar. Gün atlanırsa seri sıfırlanır.'),
+        _buildFaqItem(context, AppStrings.tr('faq_q1'), AppStrings.tr('faq_a1')),
         const SizedBox(height: 8),
-        _buildFaqItem('Kuponları nasıl kazanırım?',
-            'Bir takvim ayını hiç gün atlamadan tamamladığında o aya özel indirim kuponun otomatik olarak açılır.'),
+        _buildFaqItem(context, AppStrings.tr('faq_q2'), AppStrings.tr('faq_a2')),
         const SizedBox(height: 8),
-        _buildFaqItem('Kedimin pozları neden değişiyor?',
-            'Seçtiğin kedi maskotu her sayfada sana özel animasyonlarla moral verir ve serilerini kutlar.'),
+        _buildFaqItem(context, AppStrings.tr('faq_q3'), AppStrings.tr('faq_a3')),
       ],
     );
   }
 
-  Widget _buildFaqItem(String question, String answer) {
+  Widget _buildFaqItem(BuildContext context, String question, String answer) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
+      color: Theme.of(context).cardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: const BorderSide(color: Color(0xFFE4DFD6)),
+        side: BorderSide(
+          color: isDark ? const Color(0xFF373A47) : const Color(0xFFE4DFD6),
+        ),
       ),
       child: ExpansionTile(
         title: Text(
@@ -264,7 +289,7 @@ class _ProfileViewState extends State<ProfileView> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
             child: Text(
               answer,
-              style: const TextStyle(color: Colors.black54, fontSize: 12),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.4),
             ),
           ),
         ],
@@ -278,9 +303,9 @@ class _ProfileViewState extends State<ProfileView> {
       child: OutlinedButton.icon(
         onPressed: () => _showLogoutDialog(context),
         icon: const Icon(Icons.logout, color: Colors.redAccent),
-        label: const Text(
-          'Çıkış Yap',
-          style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+        label: Text(
+          AppStrings.tr('logout_btn'),
+          style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
         ),
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Colors.redAccent, width: 1.2),
@@ -293,20 +318,26 @@ class _ProfileViewState extends State<ProfileView> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Çıkış Yapılsın mı?'),
-        content: const Text('Oturumunu kapatmak istediğinden emin misin?'),
+        title: Text(AppStrings.tr('logout_dialog_title')),
+        content: Text(AppStrings.tr('logout_dialog_content')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Vazgeç'),
+            child: Text(AppStrings.tr('cancel')),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
             onPressed: () async {
               Navigator.of(ctx).pop();
               await AppState.instance.logout();
+              if (context.mounted) {
+                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginView()),
+                  (route) => false,
+                );
+              }
             },
-            child: const Text('Çıkış Yap'),
+            child: Text(AppStrings.tr('confirm_logout')),
           ),
         ],
       ),

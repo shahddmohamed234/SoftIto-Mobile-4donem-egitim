@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../core/localization/app_strings.dart';
 import '../../../core/state/app_state.dart';
+import '../../navigation/app_navigation_scaffold.dart';
 import 'mascot_selection_view.dart';
 
 class LoginView extends StatefulWidget {
@@ -32,31 +34,38 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 24),
-                _buildForm(context),
-                const SizedBox(height: 20),
-                _buildSubmitButton(context),
-                const SizedBox(height: 12),
-                _buildSwitchModeButton(context),
-              ],
+    return ListenableBuilder(
+      listenable: AppState.instance,
+      builder: (context, _) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildHeader(context),
+                    const SizedBox(height: 24),
+                    _buildForm(context),
+                    const SizedBox(height: 20),
+                    _buildSubmitButton(context),
+                    const SizedBox(height: 12),
+                    _buildSwitchModeButton(context),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _buildHeader(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       children: [
         Container(
@@ -64,10 +73,10 @@ class _LoginViewState extends State<LoginView> {
           height: 90,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: isDark ? const Color(0xFF2C2E38) : Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(20),
+                color: Colors.black.withAlpha(isDark ? 40 : 20),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -91,12 +100,10 @@ class _LoginViewState extends State<LoginView> {
         const SizedBox(height: 6),
         Text(
           _isRegisterMode
-              ? 'Aramıza katıl ve sevimli dostunla alışkanlıklarını kazan!'
-              : 'Günün hedeflerine ulaşmak için giriş yap!',
+              ? AppStrings.tr('register_subtitle')
+              : AppStrings.tr('welcome_subtitle'),
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.black54,
-              ),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );
@@ -108,52 +115,52 @@ class _LoginViewState extends State<LoginView> {
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Ad',
-              prefixIcon: Icon(Icons.person_outline),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('name'),
+              prefixIcon: const Icon(Icons.person_outline),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _surnameController,
-            decoration: const InputDecoration(
-              labelText: 'Soyad',
-              prefixIcon: Icon(Icons.badge_outlined),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('surname'),
+              prefixIcon: const Icon(Icons.badge_outlined),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _birthDateController,
-            decoration: const InputDecoration(
-              labelText: 'Doğum Tarihi (GG.AA.YYYY)',
-              prefixIcon: Icon(Icons.cake_outlined),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('birth_date'),
+              prefixIcon: const Icon(Icons.cake_outlined),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'E-posta Adresi',
-              prefixIcon: Icon(Icons.email_outlined),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('email'),
+              prefixIcon: const Icon(Icons.email_outlined),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _passwordController,
             obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Şifre',
-              prefixIcon: Icon(Icons.lock_outline),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('password'),
+              prefixIcon: const Icon(Icons.lock_outline),
             ),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _confirmPasswordController,
             obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Şifreyi Tekrar Gir',
-              prefixIcon: Icon(Icons.lock_reset),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('password_again'),
+              prefixIcon: const Icon(Icons.lock_reset),
             ),
           ),
         ],
@@ -164,18 +171,18 @@ class _LoginViewState extends State<LoginView> {
           TextField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'E-posta Adresi',
-              prefixIcon: Icon(Icons.email_outlined),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('email'),
+              prefixIcon: const Icon(Icons.email_outlined),
             ),
           ),
           const SizedBox(height: 14),
           TextField(
             controller: _passwordController,
             obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Şifre',
-              prefixIcon: Icon(Icons.lock_outline),
+            decoration: InputDecoration(
+              labelText: AppStrings.tr('password'),
+              prefixIcon: const Icon(Icons.lock_outline),
             ),
           ),
         ],
@@ -184,12 +191,9 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Widget _buildSubmitButton(BuildContext context) {
-    final String buttonLabel;
-    if (_isRegisterMode) {
-      buttonLabel = 'Kayıt Ol ve Maskotunu Seç';
-    } else {
-      buttonLabel = 'Giriş Yap';
-    }
+    final String buttonLabel = _isRegisterMode
+        ? AppStrings.tr('register_btn')
+        : AppStrings.tr('login_btn');
 
     return SizedBox(
       width: double.infinity,
@@ -201,12 +205,9 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Widget _buildSwitchModeButton(BuildContext context) {
-    final String switchText;
-    if (_isRegisterMode) {
-      switchText = 'Zaten bir hesabın var mı? Giriş Yap';
-    } else {
-      switchText = 'Hesabın yok mu? Kayıt Ol';
-    }
+    final String switchText = _isRegisterMode
+        ? AppStrings.tr('have_account')
+        : AppStrings.tr('no_account');
 
     return TextButton(
       onPressed: () {
@@ -235,11 +236,11 @@ class _LoginViewState extends State<LoginView> {
       final confirmPassword = _confirmPasswordController.text.trim();
 
       if (name.isEmpty || email.isEmpty || password.isEmpty) {
-        _showErrorSnackBar('Lütfen tüm zorunlu alanları doldurun.');
+        _showErrorSnackBar(AppStrings.tr('fill_all_fields'));
         return;
       }
       if (password != confirmPassword) {
-        _showErrorSnackBar('Girdiğiniz şifreler birbiriyle uyuşmuyor.');
+        _showErrorSnackBar(AppStrings.tr('passwords_dont_match'));
         return;
       }
 
@@ -260,10 +261,18 @@ class _LoginViewState extends State<LoginView> {
       }
     } else {
       if (email.isEmpty || password.isEmpty) {
-        // Fallback for easy demo if left empty
-        await AppState.instance.login('demo@goon.com', '123456');
+        // Convenient demo fallback
+        await AppState.instance.login('pati@goon.com', '123456');
       } else {
         await AppState.instance.login(email, password);
+      }
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (_) => const AppNavigationScaffold(),
+          ),
+          (route) => false,
+        );
       }
     }
   }

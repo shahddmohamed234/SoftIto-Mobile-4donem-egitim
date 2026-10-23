@@ -25,27 +25,34 @@ Uygulamanın görsel kimliği, yumuşak pastel tonları ve sevimli 3D kil/render
   - Uygulama içi varlık: `assets/icons/app_icon.png`
   - iOS Simülatör ve Cihaz İkon Seti: `ios/Runner/Assets.xcassets/AppIcon.appiconset/` altındaki tüm çözünürlükler (20x20'den 1024x1024'e kadar) otomatik oluşturulmuştur.
 
-### Renk Paleti (Material 3 - Pastel & Dinlendirici)
-Uygulamada göz yormayan, motive edici pastel tonlar tercih edilmiştir (parlak ve fosforlu renkler kesinlikle kullanılmamıştır):
-- **Zemin Rengi (Sıcak Kum / Krem):** `#F9F6F0`
-- **Ana Vurgu (Adaçayı Yeşili):** `#9DB2A1` (Butonlar, onay işaretleri, ilerleme göstergeleri)
-- **Streak Kalpleri (Pudra / Gül Kurusu):** `#DDA7A5` (Takvim kalp ikonları, seri sayacı)
-- **Rozet ve Kuponlar (Mat Lavanta):** `#B5A8CB`
-- **Metinler (Koyu Antrasit):** `#3A3A3A` (Sert siyah yerine yumuşak antrasit)
-- **Yüzey ve Kartlar:** `#FFFFFF` ve `#F1EDE6`
+### Renk Paleti (Material 3 - Açık Pastel & Sakin Gece Koyu Tema)
+Uygulamada hem gündüz hem gece kullanımına uygun iki zengin tema bulunmaktadır:
+- **Açık Pastel Tema:**
+  - Zemin (Sıcak Kum / Krem): `#F9F6F0`
+  - Ana Vurgu (Adaçayı Yeşili): `#9DB2A1` (Butonlar, onay işaretleri)
+  - Streak Kalpleri (Pudra / Gül Kurusu): `#DDA7A5`
+  - Rozet ve Kuponlar (Mat Lavanta): `#B5A8CB`
+  - Metinler (Koyu Antrasit): `#3A3A3A`
+  - Kartlar ve Yüzeyler: `#FFFFFF` ve `#F1EDE6`
+- **Sakin Gece (Koyu Tema):**
+  - Zemin (Koyu Kömür): `#191A20`
+  - Kartlar ve Yüzeyler: `#23242D` ve `#2C2E38`
+  - Kenarlıklar: `#373A47`
+  - Metinler: `#EDE9E3` (Açık Krem) ve `#A6A4A0` (Muted)
+  - Vurgular: Yumuşak Adaçayı `#AEC4B2` ve Gül Kurusu `#E8B6B4`
 
 ---
 
-## 3. 3D Kedi Maskotları (Yol Arkadaşları)
+## 3. 3D Kedi Maskotları (Lottie Canlı Vektörel Animasyonlar)
 
 Uygulama ilk açıldığında veya profil ekranından istendiğinde 4 farklı kedi karakterinden biri seçilebilir:
 
-1. **Pamuk (`cat_pamuk.png`):** Sakin, şefkatli ve huzur dolu beyaz tüy yumağı.
-2. **Tarçın (`cat_tarcin.png`):** Enerjik, neşeli ve durdurulamaz sarman kedi.
-3. **Duman (`cat_duman.png`):** Derin düşünen, bilge ve huzurlu gri kedi.
-4. **Zeytin (`cat_zeytin.png`):** Meraklı, oyuncu ve lavanta fiyonklu smokin kedi.
+1. **Pamuk (`cat_pamuk.json` / `cat_pamuk.png`):** Sakin, şefkatli ve huzur dolu beyaz tüy yumağı.
+2. **Tarçın (`cat_tarcin.json` / `cat_tarcin.png`):** Enerjik, neşeli ve durdurulamaz sarman kedi.
+3. **Duman (`cat_duman.json` / `cat_duman.png`):** Derin düşünen, bilge ve huzurlu gri kedi.
+4. **Zeytin (`cat_zeytin.json` / `cat_zeytin.png`):** Meraklı, oyuncu ve lavanta fiyonklu smokin kedi.
 
-> **Global Maskot Layout:** Seçilen kedi, `BaseLayoutWithCat` bileşeni sayesinde her sayfanın sağ alt köşesinde nefes alma/zıplama animasyonu ve konuşma balonuyla kullanıcıyı izler.
+> **Global Maskot Layout:** Seçilen kedi, `BaseLayoutWithCat` bileşeni sayesinde `lottie: ^3.6.1` ile her sayfanın sağ alt köşesinde sürekli nefes alan, süzülen (`idle`) ve tıklandığında neşeyle zıplayan (`tap bounce`) gerçek vektörel karakter olarak kullanıcıya eşlik eder. Konuşma balonu 4.5 saniyede otomatik kaybolarak arkadaki içerikleri kapatmaz.
 
 ---
 
@@ -61,10 +68,11 @@ Uygulama ilk açıldığında veya profil ekranından istendiğinde 4 farklı ke
 - Kullanıcı dilediği kediyi seçip onaylayarak ana uygulamaya geçer.
 
 ### 3. Ana Sayfa - "Bugün Neler Yaptın?" (`home_view.dart`)
-- **Kalpli Streak Sayacı:** Sağ üst köşede pudra/gül kurusu kalp içinde mevcut kesintisiz gün serisi yer alır.
-- **Alışkanlık Ekleme Formu:** Başlık, açıklama ve emoji seçimiyle anında yeni alışkanlık kaydetme.
-- **Hazır Öneri Listesi:** Koşu, Yürüyüş, Kitap Okuma, Günlük Yazma, Boyama, Örgü, Meditasyon, Su İçme, Erken Uyanma gibi önerilerden tek tıkla ekleme.
-- **Günün Alışkanlıkları:** Bugün tamamlanan görevlerin işaretlenmesi, tamamlandığında çizgi animasyonu ve serinin güncellenmesi.
+- **Tarih Rozeti:** Sayfa başında canlı takvim ikonu ve geçerli tarih (TR: `23 Ekim Cuma` / EN: `Friday, 23 Oct`).
+- **Kalpli Streak Sayacı:** Sağ üst köşede pudra/gül kurusu kalp içinde mevcut kesintisiz gün serisi.
+- **Alışkanlık Ekleme Formu:** Başlık, açıklama ve emoji seçimiyle anında yeni alışkanlık kaydetme. Yeni eklenen alışkanlık doğrudan tamamlanmış olarak sayılır ve seriyi anında artırır.
+- **Hazır Popüler Öneriler Modalı (`DraggableScrollableSheet`):** Koşu, Yürüyüş, Kitap Okuma, Meditasyon, 2 Litre Su, Erken Uyanma gibi önerilerden tek tıkla ekleme.
+- **Günün Alışkanlıkları ve Günlük Sıfırlanma:** Gece yarısı geçildiğinde dünün alışkanlıkları otomatik olarak yeni günde yapılmamışa döner. Tamamlanan alışkanlıklarda üzeri çizili yazı yerine temiz yeşil onay kutusu (`check_circle`) yer alır. İki yönlü dil desteği ile Türkçe eklenen alışkanlıklar İngilizceye geçildiğinde otomatik çevrilir.
 
 ### 4. Alışkanlık İstatistikleri (`statistics_view.dart`)
 - Tüm alışkanlıkların emojili listesi ve toplam yapılma sayıları (`totalCount`).

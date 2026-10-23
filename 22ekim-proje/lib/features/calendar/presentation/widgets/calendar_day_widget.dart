@@ -20,7 +20,9 @@ class CalendarDayWidget extends StatelessWidget {
         border: Border.all(
           color: isStreakCompleted
               ? Theme.of(context).colorScheme.tertiary.withAlpha(120)
-              : Colors.black12,
+              : (Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF373A47)
+                  : Colors.black12),
           width: 1,
         ),
       ),
