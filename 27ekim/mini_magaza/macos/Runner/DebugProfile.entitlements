@@ -9,6 +9,10 @@
 	<key>com.apple.security.network.server</key>
 	<true/>
 	<key>com.apple.security.network.client</key>
+	<!-- Required to fetch data from the internet. -->
+<key>com.apple.security.network.client</key>
+<true/>
+
 <true/>
 </dict>
 </plist>
