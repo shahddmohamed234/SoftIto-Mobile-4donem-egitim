@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 // uygulamaRotalari değişkeninin bulunduğu dosyayı import edin
-import '../route/routes.dart'; 
+import 'route/routes.dart'; 
 
 void main() {
   runApp(const BenimUygulamam());
