@@ -27,5 +27,15 @@ class UrunModel {
     int? id,
     String? baslik,
     double? fiyat,
-  })
+    String? resimUrl,
+    String? kategori,
+  }) {
+    return UrunModel(
+      id: id ?? this.id,
+      baslik: baslik ?? this.baslik,
+      fiyat: fiyat ?? this.fiyat,
+      resimUrl: resimUrl ?? this.resimUrl,
+      kategori: kategori ?? this.kategori,
+    );
+  }
 }
