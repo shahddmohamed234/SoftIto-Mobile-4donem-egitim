@@ -13,7 +13,7 @@ final GoRouter uygulamaRotalari = GoRouter(
         },
         routes:[
           GoRoute(
-            path:'/profil',
+            path:'/vitrin',
             builder:(context,state) => const VitrinEkrani(),
           ),
            GoRoute(
