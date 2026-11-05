@@ -117,12 +117,40 @@ class BildirimListesiKarti extends StatelessWidget {
                     ),
                   )
                 : ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: bildirimler.length,
-                  separatorBuilder: (_,__) => const Divider(height: 1),
-                  itemBuilder: (context,index){},
-                ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: bildirimler.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final b = bildirimler[index];
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const CircleAvatar(
+                          backgroundColor: Color.fromARGB(0, 123, 238, 230),
+                          child: Icon(
+                            Icons.mark_email_read_outlined,
+                            color: Color.fromARGB(0, 113, 26, 26),
+                            size: 20,
+                          ),
+                        ),
+                        title: Text(
+                          b.baslik,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        subtitle: Text(b.icerik),
+                        trailing: Text(
+                          '${b.tarih.hour.toString().padLeft(2, '0')}:${b.tarih.minute.toString().padLeft(2, '0')}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade100,
+                          ), // tarihten sadece saati çektik ve 10dan küçükse sayinın başına 0 gelir 09 08 07 gibi
+                        ),
+                      );
+                    },
+                  ),
           ],
         ),
       ),
